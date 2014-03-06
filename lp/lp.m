@@ -44,9 +44,9 @@ end
 
 toggleobject(targ1);
 toggleobject(targ2);
-if (targ2 == 1)
+if (targ2 == 2)
     eventmarker(122); % Targ 1 On Again
-elseif (targ2 == 2)
+elseif (targ2 == 3)
     eventmarker(123); % Targ 2 On
 end
 
