@@ -1,0 +1,2 @@
+﻿Condition	Frequency	Block	Timing File	TaskObject#1	TaskObject#2			TaskObject#3		    	TaskObject#4		
+1		1		1	lp		fix(0,0)	sqr([4 2],[0 1 0],1,-5,0)	sqr([2 4],[0 1 0],1,-5,0)	sqr([4 2],[0 0 1],1,5,0)	
