@@ -42,7 +42,6 @@ if ~ontarget,
     return
 end
 
-goodmonkey(50);
 
 % sample epoch
 toggleobject(sample); % turn on sample
