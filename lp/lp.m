@@ -15,23 +15,19 @@ wait_release = 1000;
 % TASK:
 
 % show fix spot:
-toggleobject(start_spot);
-eventmarker(120) % Fixation Spot Shown
+toggleobject(start_spot, 'eventmarker', 120) % Fixation Spot Shown
 
 % Here '1' refers to the button/lever index, and not the target
 pressed = eyejoytrack('acquiretouch', 1, [], wait_press);
 if ~pressed
     trialerror(1); % didn't press in time
-    toggleobject(start_spot)
-    eventmarker(125) %Didn't press  by end of fixation cue
+    toggleobject(start_spot, 'eventmarker', 125)%Didn't press  by end of fixation cue
     idle(200, [1, 0, 0]);
     return
 end
 
 toggleobject(start_spot);
-toggleobject(targ1);
-eventmarker(121); %Targ 1 On
-
+toggleobject(targ1, 'eventmarker', 121); %Targ 1 On
 held = eyejoytrack('holdtouch', 1, [], hold_time);
 if ~held,
     % flip red
