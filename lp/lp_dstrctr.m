@@ -29,7 +29,7 @@ end
 
 toggleobject(start_spot);
 toggleobject(targ1, 'eventmarker', 121); %Targ 1 On
-%toggleobject(targblue);
+toggleobject(targblue);
 
 held = eyejoytrack('holdtouch', 1, [], hold_time);
 if ~held,
@@ -37,7 +37,7 @@ if ~held,
     trialerror(2); % released too early
     eventmarker(126); %Released too soon Time
     toggleobject(targ1);
-    %toggleobject(targblue);
+    toggleobject(targblue);
     idle(200, [1, 0, 0]);
     return
 end
@@ -53,7 +53,7 @@ end
 released = ~eyejoytrack('holdtouch', 1, [], wait_release);
 if (released && targ1 == targ2)
     toggleobject(targ2);
-    %toggleobject(targblue);
+    toggleobject(targblue);
     % flip red
     trialerror(3); 
     eventmarker(127); % Released when should not have
@@ -64,7 +64,7 @@ end
 
 if (~released && targ1 ~= targ2)
     toggleobject(targ2);
-    %toggleobject(targblue);
+    toggleobject(targblue);
     % flip red
     trialerror(4); % didn't release in time
     eventmarker(128); % Did not release when should have
@@ -75,7 +75,7 @@ end
 
 
 toggleobject(targ2);
-%toggleobject(targblue);
+toggleobject(targblue);
 eventmarker(124); %Performed Correctly
 
 trialerror(0); % correct
