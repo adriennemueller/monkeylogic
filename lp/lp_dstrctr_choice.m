@@ -12,6 +12,7 @@ dist2 = randi([5 6],1);
 
 % define time intervals (in ms):
 wait_press = 1000;
+cue_time = 300;
 hold_time = 400;
 wait_release = 1000;
 
@@ -30,7 +31,18 @@ if ~pressed
 end
 
 toggleobject(start_spot); %Off
-toggleobject([cue targ1 dist1], 'eventmarker', 121);
+
+toggleobject(cue, 'eventmarker', 131); % Cue on
+held = eyejoytrack('holdtouch', 1, [], cue_time);
+if ~held,
+    % flip red
+    trialerror(2); % released too early
+    toggleobject(cue, 'eventmarker', 126); %Released too soon
+    idle(200, [1, 0, 0]);
+    return
+end
+
+toggleobject([targ1 dist1], 'eventmarker', 121);
 
 held = eyejoytrack('holdtouch', 1, [], hold_time);
 if ~held,
