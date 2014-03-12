@@ -55,9 +55,9 @@ end
 
 toggleobject([targ1 dist1 targ2 dist2]);
 
-if (targ2 == 2)
+if (targ2 == 3)
     eventmarker(122); % Targ Same
-elseif (targ2 == 3)
+elseif (targ2 == 4)
     eventmarker(123); % Targ Change
 end
 
