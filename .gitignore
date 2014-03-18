@@ -7,3 +7,6 @@
 # Ignore computer specific config files for monkeylogic 
 *cfg.mat
 *_runtime.m
+
+# Ignore .bhv files
+*.bhv
