@@ -9,7 +9,7 @@ targ2 = 3;
 
 % define time intervals (in ms):
 wait_press = 1000;
-hold_time = 250;
+hold_time = 400; %250
 wait_release = 1000;
 
 % TASK:
