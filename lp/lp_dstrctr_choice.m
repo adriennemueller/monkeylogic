@@ -6,9 +6,21 @@
 start_spot = 1;
 cue = 2;
 targ1 = 3;
-targ2 = randi([3 4],1);
+targ2 = randi([3 4],1); %Original 50/50 likelihood
 dist1 = 5;
-dist2 = randi([5 6],1);
+% dist2 = randi([5 6],1); % Original 50/50 likelihood
+
+% Make 'opposite' trials more likely. 
+if targ2 == 3
+    prob = [0.2, 0.8]; % Probabilities for dist2 (same, diff)
+elseif targ2 == 4
+    prob = [0.8, 0.2]; % Probabilities for dist2 (same, diff)
+end
+
+r = rand;
+distchoice = sum(r >= cumsum([0, prob]));
+dist2 = distchoice + 4; % Make val 5 or 6 not 1 or 2.
+
 
 % define time intervals (in ms):
 wait_press = 1000;
