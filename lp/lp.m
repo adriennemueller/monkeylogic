@@ -10,7 +10,7 @@ targ2 = randi([2 3],1);
 % define time intervals (in ms):
 wait_press = 1000;
 hold_time = 400;
-wait_release = 1000;
+wait_release = 800;
 
 % TASK:
 
