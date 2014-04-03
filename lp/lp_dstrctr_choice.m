@@ -84,7 +84,7 @@ if (released && targ1 == targ2)
     % flip red
     trialerror(3); 
     toggleobject([cue targ2 dist2], 'eventmarker', 127); % Released when should not have
-    idle(200, [1, 0, 0]);
+    idle(1000, [1, 0, 0]);
     return
 end
 
@@ -93,7 +93,7 @@ if (~released && targ1 ~= targ2)
     toggleobject([cue targ2 dist2], 'eventmarker', 128 );
     % flip red
     trialerror(4); % didn't release in time
-    idle(200, [1, 0, 0]);
+    idle(1000, [1, 0, 0]);
     return
 end
 
