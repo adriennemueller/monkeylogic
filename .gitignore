@@ -1,5 +1,6 @@
 # Ignore temporary matlab files
 *.asv
+*~
 
 # Ignore Vim swap files.
 .*.swp
