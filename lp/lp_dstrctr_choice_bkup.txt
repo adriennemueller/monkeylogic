@@ -1,9 +1,0 @@
-Condition	Frequency	Block	Timing File		TaskObject#1	TaskObject#2			TaskObject#3			TaskObject#4			TaskObject#5			TaskObject#6
-1		1		1 	lp_dstrctr_choice	fix(0,0)	crc(1,[0 1 0], 1, 0,0)	sqr([4 2],[0 1 0],1,5,0)	sqr([2 4],[0 1 0],1,5,0)	sqr([4 2],[0 0 1],1,-5,0)	sqr([2 4],[0 0 1],1,-5,0)
-2		1		1 	lp_dstrctr_choice	fix(0,0)	crc(1,[0 1 0], 1, 0,0)	sqr([4 2],[0 1 0],1,0,5)	sqr([2 4],[0 1 0],1,0,5)	sqr([4 2],[0 0 1],1,0,-5)	sqr([2 4],[0 0 1],1,0,-5)
-3		1		1 	lp_dstrctr_choice	fix(0,0)	crc(1,[0 1 0], 1, 0,0)	sqr([4 2],[0 1 0],1,-5,0)	sqr([2 4],[0 1 0],1,-5,0)	sqr([4 2],[0 0 1],1,5,0)	sqr([2 4],[0 0 1],1,5,0)
-4		1		1 	lp_dstrctr_choice	fix(0,0)	crc(1,[0 1 0], 1, 0,0)	sqr([4 2],[0 1 0],1,0,-5)	sqr([2 4],[0 1 0],1,0,-5)	sqr([4 2],[0 0 1],1,0,5)	sqr([2 4],[0 0 1],1,0,5)
-5		1		2 	lp_dstrctr_choice	fix(0,0)	crc(1,[0 0 1], 1, 0,0)	sqr([4 2],[0 0 1],1,5,0)	sqr([2 4],[0 0 1],1,5,0)	sqr([4 2],[0 1 0],1,-5,0)	sqr([2 4],[0 1 0],1,-5,0)	
-6		1		2 	lp_dstrctr_choice	fix(0,0)	crc(1,[0 0 1], 1, 0,0)	sqr([4 2],[0 0 1],1,0,5)	sqr([2 4],[0 0 1],1,0,5)	sqr([4 2],[0 1 0],1,0,-5)	sqr([2 4],[0 1 0],1,0,-5)	
-7		1		2 	lp_dstrctr_choice	fix(0,0)	crc(1,[0 0 1], 1, 0,0)	sqr([4 2],[0 0 1],1,-5,0)	sqr([2 4],[0 0 1],1,-5,0)	sqr([4 2],[0 1 0],1,5,0)	sqr([2 4],[0 1 0],1,5,0)	
-8		1		2 	lp_dstrctr_choice	fix(0,0)	crc(1,[0 0 1], 1, 0,0)	sqr([4 2],[0 0 1],1,0,-5)	sqr([2 4],[0 0 1],1,0,-5)	sqr([4 2],[0 1 0],1,0,5)	sqr([2 4],[0 1 0],1,0,5)	
