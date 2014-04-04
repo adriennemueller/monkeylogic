@@ -10,19 +10,19 @@ MonkeyLogic original code from MonkeyLogic at Brown University. Also, task files
 
 On Lever Training: Start with levertrain, and move quickly to levertrainhold once the subject grasps the concept of pressing the lever. 
 
-**levertrain**: Lever Training
+**levertrain**: Lever Training  
 Trains a subject to associate leverpresses with a target on-screen.
 
-**levertrainhold**: Hold lever and release upon cue.
+**levertrainhold**: Hold lever and release upon cue.  
 Trains a subject to hold a lever for a certain amount of time while a target is visible  and release when the target changes.
 
-**lp**: Lever Press Task
+**lp**: Lever Press Task  
 Subject releases a lever when a target changes, keeps the lever pressed when it does not.
 
-**lp_colorswitch**: Two-color Lever Press Task
+**lp_colorswitch**: Two-color Lever Press Task  
 Same as Lever Press Task, except target is cued, can be either green or blue, and can be in any of four cardinal directions.
 
-**lp_dstrctr**: Lever Press Distractor Task
+**lp_dstrctr**: Lever Press Distractor Task  
 Presents a cued lever-press target at one of four locations and a distractor opposite.
 
 **lp_dstrctr_choice**: Presents a cued lever-press target at one of four locations and a distractor opposite.
