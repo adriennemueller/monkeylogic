@@ -25,17 +25,17 @@ Same as Lever Press Task, except target is cued, can be either green or blue, an
 **lp_dstrctr**: Lever Press Distractor Task  
 Presents a cued lever-press target at one of four locations and a distractor opposite.
 
-**lp_dstrctr_choice**: Presents a cued lever-press target at one of four locations and a distractor opposite.
-lp_dstrctr_choice shows cued green or cued blue targets in blocks.
-lp_dstrctr_choice_DOWN shows only green targets, with DOWN targets presented at a higher frequency than others.
-lp_dstrctr_choice_cueing shows green targets *and* distractors, only left and right. Cue indicates direction.
+**lp_dstrctr_choice**: Presents a cued lever-press target at one of four locations and a distractor opposite.  
+lp_dstrctr_choice shows cued green or cued blue targets in blocks.  
+lp_dstrctr_choice_DOWN shows only green targets, with DOWN targets presented at a higher frequency than others.  
+lp_dstrctr_choice_cueing shows green targets *and* distractors, only left and right. Cue indicates direction.  
 
 -------------------------------------------
 
-**dms**: Delayed Match to Sample Task
+**dms**: Delayed Match to Sample Task  
 Included with MonkeyLogic.
 
-**cds**: Change Detection Task
+**cds**: Change Detection Task  
 
 
 
