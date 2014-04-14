@@ -25,7 +25,7 @@ if ~pressed
     toggleobject(start_spot, 'eventmarker', 125) % Didn't press by end of fixation cue
     trialerror(1); % Didn't press in time
     idle(200, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 % Switch 'fixation spot' for Target
@@ -37,7 +37,7 @@ if ~held,
     toggleobject(targ1, 'eventmarker', 126); %Turn off target
     trialerror(2); % Released too soon
     idle(200, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 % Switch first target to second target (which is either the same or different)
@@ -62,10 +62,10 @@ if (~released && targ1 ~= targ2)
     toggleobject(targ2, 'eventmarker', 128); %Turn off target
     trialerror(4); % Did not release in time
     idle(200, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 toggleobject(targ2, 'eventmarker', 124); %Turn off target
 trialerror(0); % Correct
 goodmonkey(50); % Reward
-% END OF TRIAL
+

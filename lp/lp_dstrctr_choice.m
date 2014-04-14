@@ -1,6 +1,9 @@
 %lp_dstrctr_choice (timing script)
-
-% This task requires the animal to hold a lever down for a specific length of time.
+% This task requires the animal to hold a lever down for a specific length
+% of time. A cued target and a distractor are presented simultaneously. If 
+% the target changes, the animal must release the lever within a certain
+% time window of the change to be rewarded. If the target does not change, 
+% the animal must keep the lever held to be rewarded.
 
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;
@@ -37,7 +40,7 @@ if ~pressed
     toggleobject(start_spot, 'eventmarker', 125) % Didn't press by end of fixation cue
     trialerror(1); % Didn't press in time
     idle(200, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 % Turn on Cue
@@ -73,7 +76,7 @@ if ~held,
     toggleobject(cue, 'eventmarker', 126); % Turn off cue
     trialerror(2); % Released too early
     idle(200, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 % Turn on Target and Distractor
@@ -85,7 +88,7 @@ if ~held,
     toggleobject([cue targ1 dist1], 'eventmarker', 126); %Turn off cue, target and distractor
     trialerror(2); % Released too soon
     idle(200, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 % Change targets or distractors (different or the same)
@@ -116,10 +119,10 @@ if (~released && targ1 ~= targ2)
     toggleobject([cue targ2 dist2], 'eventmarker', 128); %Turn off cue, target and distractor
     trialerror(4); % Did not release in time
     idle(1500, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 toggleobject([cue targ2 dist2], 'eventmarker', 124); %Turn off target and distractor
 trialerror(0); % Correct
 goodmonkey(50); % Reward
-% END OF TRIAL
+

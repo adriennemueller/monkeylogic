@@ -13,8 +13,7 @@ targ1 = 2;
 wait_press = 1000;
 wait_release = 1000;
 
-
-%%%%%%%%% TASK %%%%%%%%
+%%%%%%%%% TASK %%%%%%%%%
 
 % Show Fixation Spot, Cues the Beginning of a Trial:
 toggleobject(start_spot, 'eventmarker', 120); % Fixation Spot Shown
@@ -25,7 +24,7 @@ if ~pressed
     toggleobject(start_spot, 'eventmarker', 125) % Turn off target
     trialerror(1); % Didn't press in time
     idle(200, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 % Switch 'fixation spot' for Target
@@ -37,11 +36,10 @@ if (~released)
     toggleobject(targ1, 'eventmarker', 128); % Turn off target
     trialerror(4); % Did not release in time
     idle(200, [1, 0, 0]); % Red Error Screen
-    return % END OF TRIAL
+    return
 end
 
 
 toggleobject(targ1, 'eventmarker', 124); % Turn off target
-trialerror(0);  % Correct
+trialerror(0); 
 goodmonkey(50); % Reward
-% END OF TRIAL
