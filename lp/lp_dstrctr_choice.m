@@ -24,7 +24,7 @@ dist2 = distchoice + 4; % Make val 5 or 6 not 1 or 2.
 
 % define time intervals (in ms):
 wait_press = 1000;
-cue_time = 300;
+cue_time = 400;
 hold_time = 400;
 wait_release = 1000;
 
@@ -45,6 +45,30 @@ end
 toggleobject(start_spot); %Off
 
 toggleobject(cue, 'eventmarker', 131); % Cue on
+toggleobject(cue, 'eventmarker', 131); % Cue off
+toggleobject(cue, 'eventmarker', 131); % Cue on
+toggleobject(cue, 'eventmarker', 131); % Cue off
+toggleobject(cue, 'eventmarker', 131); % Cue on
+toggleobject(cue, 'eventmarker', 131); % Cue off
+toggleobject(cue, 'eventmarker', 131); % Cue on
+toggleobject(cue, 'eventmarker', 131); % Cue off
+toggleobject(cue, 'eventmarker', 131); % Cue on
+toggleobject(cue, 'eventmarker', 131); % Cue off
+toggleobject(cue, 'eventmarker', 131); % Cue on
+toggleobject(cue, 'eventmarker', 131); % Cue off
+toggleobject(cue, 'eventmarker', 131); % Cue on
+toggleobject(cue, 'eventmarker', 131); % Cue off
+toggleobject(cue, 'eventmarker', 131); % Cue on
+
+held = eyejoytrack('holdtouch', 1, [], cue_time);
+if ~held,
+    % flip red
+    trialerror(2); % released too early
+    toggleobject(cue, 'eventmarker', 126); %Released too soon
+    idle(200, [1, 0, 0]);
+    return
+end
+
 held = eyejoytrack('holdtouch', 1, [], cue_time);
 if ~held,
     % flip red
@@ -84,7 +108,7 @@ if (released && targ1 == targ2)
     % flip red
     trialerror(3); 
     toggleobject([cue targ2 dist2], 'eventmarker', 127); % Released when should not have
-    idle(1000, [1, 0, 0]);
+    idle(1500, [1, 0, 0]);
     return
 end
 
@@ -93,7 +117,7 @@ if (~released && targ1 ~= targ2)
     toggleobject([cue targ2 dist2], 'eventmarker', 128 );
     % flip red
     trialerror(4); % didn't release in time
-    idle(1000, [1, 0, 0]);
+    idle(1500, [1, 0, 0]);
     return
 end
 
