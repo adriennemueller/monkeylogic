@@ -15,7 +15,7 @@ dist1 = 5;
 
 % Make 'opposite' trials more likely. 
 if targ2 == 3
-    prob = [0.2, 0.8]; % Probabilities for dist2 (same, diff)
+    prob = [0, 1]; % Probabilities for dist2 (same, diff)
 elseif targ2 == 4
     prob = [0.8, 0.2]; % Probabilities for dist2 (same, diff)
 end
@@ -52,14 +52,7 @@ toggleobject(cue, 'eventmarker', 131); % Cue off
 toggleobject(cue, 'eventmarker', 131); % Cue on
 toggleobject(cue, 'eventmarker', 131); % Cue off
 toggleobject(cue, 'eventmarker', 131); % Cue on
-toggleobject(cue, 'eventmarker', 131); % Cue off
-toggleobject(cue, 'eventmarker', 131); % Cue on
-toggleobject(cue, 'eventmarker', 131); % Cue off
-toggleobject(cue, 'eventmarker', 131); % Cue on
-toggleobject(cue, 'eventmarker', 131); % Cue off
-toggleobject(cue, 'eventmarker', 131); % Cue on
-toggleobject(cue, 'eventmarker', 131); % Cue off
-toggleobject(cue, 'eventmarker', 131); % Cue on
+
 
 held = eyejoytrack('holdtouch', 1, [], cue_time);
 if ~held,
@@ -124,5 +117,4 @@ end
 
 toggleobject([cue targ2 dist2], 'eventmarker', 124); %Turn off target and distractor
 trialerror(0); % Correct
-goodmonkey(50); % Reward
-
+goodmonkey(250); % Reward
