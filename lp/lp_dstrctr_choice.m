@@ -117,4 +117,4 @@ end
 
 toggleobject([cue targ2 dist2], 'eventmarker', 124); %Turn off target and distractor
 trialerror(0); % Correct
-goodmonkey(250); % Reward
+goodmonkey(240); % Reward
