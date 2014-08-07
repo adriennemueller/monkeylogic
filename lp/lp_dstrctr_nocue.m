@@ -13,15 +13,15 @@ wait_release = 1000;
 %Select which of the four combinations the two targets will display as
 % 1-3 - neither changes, 4 - 1 changes, 5 - the other changes, 6 - both
 % change
-comb = randi(6);
-if comb <= 3
+comb = randi(4);
+if comb <=2
     targ1new = 2; targ2new = 4; eventmarker(132); % No Change
-elseif comb == 4
+elseif comb == 3
     targ1new = 3; targ2new = 4; eventmarker(133); % First Change
-elseif comb == 5
+elseif comb == 4 
     targ1new = 2; targ2new = 5; eventmarker(134); % Second Change
-elseif comb == 6
-    targ1new = 3; targ2new = 5; eventmarker(135); % Both Change
+% elseif comb == 6
+%     targ1new = 3; targ2new = 5; eventmarker(135); % Both Change
 end
 
 
@@ -57,14 +57,14 @@ toggleobject([targ1 targ2 targ1new targ2new]);
 % Wait for release
 released = ~eyejoytrack('holdtouch', 1, [], wait_release);
 
-if (released && (comb <= 3))
+if (released && (comb <= 2))
     toggleobject([start_spot targ1new targ2new], 'eventmarker', 127); %Turn off fixation spot and targets
     trialerror(3); % Released when should not have
     idle(1500, [1, 0, 0]); % Red Error Screen
     return
 end
 
-if (~released && (comb >=4))
+if (~released && (comb >= 3))
     toggleobject([start_spot targ1new targ2new], 'eventmarker', 128); %Turn off fixation spot and targets
     trialerror(4); % Did not release in time
     idle(1500, [1, 0, 0]); % Red Error Screen
