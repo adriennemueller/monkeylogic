@@ -20,7 +20,7 @@ global SIMULATION_MODE
 % modified 10/2/12 -DF (to fix bug that caused first movie frame to be
 % displayed twice)
 % modified 3/18/13 -DF (set_object_path bug fix)
-% modified 3/28/13 -DF (ttl buf fix/ modify/improve toggleobject)
+% modified 3/28/13 -DF (ttl bug fix/ modify/improve toggleobject)
 
 Codes = []; %#ok<NASGU>
 rt = NaN; %#ok<NASGU>
@@ -35,7 +35,7 @@ if ~isempty(DaqInfo.AnalogInput),
     start(DaqInfo.AnalogInput);
     while ~isrunning(DaqInfo.AnalogInput), end
     trialtime(-1, ScreenInfo); %initialize trial timer
-    axes(findobj(ScreenInfo.ControlScreenHandle, 'tag', 'replica'));
+    set(gcf, 'CurrentAxes', findobj(ScreenInfo.ControlScreenHandle, 'tag', 'replica'));
     drawnow; %flush all pending graphics
     while ~DaqInfo.AnalogInput.SamplesAvailable, end
 else
@@ -160,6 +160,7 @@ return
 %%
 function [tflip, framenumber] = toggleobject(stimuli, varargin)
 persistent TrialObject ScreenData DAQ togglecount ObjectStatusRecord yrasterthresh ltb lastframe activemovies % %taken from TaskObject & ScreenInfo
+
 tflip = [];
 framenumber = [];
 movie_advance_only = 0;
@@ -183,20 +184,20 @@ if stimuli == -1, %initialize
 elseif stimuli == -2, %trial exit data
     tflip = ObjectStatusRecord;
     return
-elseif stimuli == -3, %call from reposition_object or set_object_path or eyejoytrack(-7)
+elseif stimuli == -3, %call from reposition_object or set_object_path
     stimnum = varargin{1};
 	status = TrialObject(stimnum).Status;
 	TrialObject(stimnum) = varargin{2};
 	TrialObject(stimnum).Status = status;
     statrec = double(cat(1, TrialObject.Status));
-    if varargin{3}, %called from reposition_object, not set_object_path or eyejoytrack(-7)
+    if varargin{3}, %called from reposition_object, not set_object_path
         togglecount = togglecount + 1;
         statrec(stimnum) = 2;
         ObjectStatusRecord(togglecount).Time = round(trialtime);
         ObjectStatusRecord(togglecount).Status = statrec;
         ObjectStatusRecord(togglecount).Data{1} = [TrialObject(stimnum).XPos TrialObject(stimnum).YPos];
         if TrialObject(stimnum).Status
-            toggleobject([stimnum stimnum], 'drawmode', 'fast');
+            toggleobject(stimnum, 'Status', 'On', 'drawmode', 'fast');
         end
     end
     return
@@ -359,12 +360,15 @@ end
 
 videochange = 0;
 
-if stimuli == -4
+if any(stimuli == -4 | stimuli == 0)										%the bitwise or takes care of cases where stimuli is a vector
 	stimuli_fortoggle = find([TrialObject.Status] ~= 0);
+	stimuli_fortoggle = fliplr(stimuli_fortoggle);
 else
-	stimuli_fortoggle = union(stimuli, find([TrialObject.Status] ~= 0));
+	temp = find([TrialObject.Status] ~= 0);									%all objects with non-zero status
+	temp = setdiff(temp, stimuli);											%all objects with non-zero status excluding stimuli objects
+																			%this is in case the same stimulus is called multiple times
+	stimuli_fortoggle = sort([stimuli temp], 2, 'descend');
 end
-stimuli_fortoggle = fliplr(stimuli_fortoggle);
 
 for i = stimuli_fortoggle,
 	ob = TrialObject(i);
@@ -386,13 +390,16 @@ for i = stimuli_fortoggle,
                     user_warning('Skipped %i frame(s) of %s at %3.1f ms', (currentframe - lastframe - 1), ob.Name, trialtime);
 				end
 				
-				if ~activemovies(i)			%This is for when an object is toggled back on after being toggled off in one trial
+				if ~activemovies(i)			%this is for when an object is toggled back on after being toggled off in one trial
 					activemovies(i) = 1;
 				end
 				
                 indx = round(ob.FrameStep*(currentframe - ob.InitFrame)) + ob.StartFrame;
                 modulus = max(length(ob.FrameOrder),ob.NumFrames);
-                indx = mod(indx, modulus) + 1;
+                indx = mod(indx, modulus);
+				if indx == 0
+					indx = modulus;			%don't want the last frame to be skipped
+				end
                 
 				if ~isempty(ob.FrameEvents),
                     f_list = ob.FrameEvents(1,:);
@@ -404,17 +411,16 @@ for i = stimuli_fortoggle,
 				end
                 
 				if indx > length(ob.FrameOrder),
-                    ob.Status = indx;
+                    ob.Status = indx - 1;									%the -1 negates the +1 that comes a few lines later
+																			%that +1 is required to take care of set_object_path
                 else
                     ob.Status = ob.FrameOrder(indx);
 				end
-				
 				
 				ob.Status = mod(ob.Status, ob.NumFrames) + 1;
 				ob.CurrFrame = ob.CurrFrame + (currentframe - lastframe) * ob.PositionStep;
 				indx = round(ob.CurrFrame - ob.InitFrame) + ob.StartPosition;
 				ob.CurrentPosition = mod(indx, ob.NumPositions) + 1;
-				
             end
             mlvideo('blit', ScreenData.Device, ob.Buffer(ob.Status), ob.XsPos(ob.CurrentPosition), ob.YsPos(ob.CurrentPosition), ob.Xsize, ob.Ysize);
             TrialObject(i) = ob; %update persistent TrialObject array
@@ -619,10 +625,12 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ontarget, rt] = eyejoytrack(fxn1, varargin)
 global SIMULATION_MODE
+global RFM_TASK
 persistent TrialObject DAQ AI ScreenData eTform jTform ControlObject totalsamples ejt_totaltime min_cyclerate...
     joyx joyy eyex eyey joypresent eyepresent eyetarget_index eyetarget_record ...
     buttonspresent analogbuttons buttonnumber buttonx buttonsdio ...
-    lastframe benchmark benchdata benchcount benchdata2 benchcount2 benchmax
+    lastframe benchmark benchdata benchcount benchdata2 benchcount2 benchmax ...
+	rfmkeyflag rfmobpos rfmmov numframespermov rfmkeys
 
 t1 = trialtime;
 ontarget = 0;
@@ -717,7 +725,9 @@ elseif fxn1 == -2, %call from showcursor
     return
 elseif fxn1 == -3, %update from reposition_object or set_object_path
     stimnum = varargin{1};
+	status = TrialObject(stimnum).Status;
     TrialObject(stimnum) = varargin{2};
+	TrialObject(stimnum).Status = status;
     return
 elseif fxn1 == -4, %call from end_trial
     if eyetarget_index,
@@ -750,6 +760,48 @@ elseif fxn1 == -6, %benchmarking
     ontarget{1} = benchdata(1:benchcount); %retrieve current benchmark data
     ontarget{2} = benchdata2(1:benchcount2);
     return
+elseif fxn1 == -7, %RFM
+    fxn1 = 'holdfix';
+    if isempty(rfmmov)
+        rfmmov = varargin{1};
+    end
+    movs = 2 : 6;                   % taskobject indices for the rfm movies
+    for i = movs
+        TrialObject(i).FrameStep = 0;
+    end
+	reposition_object(-1, TrialObject, ScreenData); % update reposition_object's copy of TrialObject
+	toggleobject(-1, TrialObject, ScreenData, DAQ); % update toggleobject's copy of TrialObject
+	
+    rfmkeyflag = 0;					% initialize
+    rfmobpos_conds = [1 5 8 3 3];	% number of shapes, sizes, rotations, size ratios, colors in rfm object. TODO make soft-coded
+    numframespermov = prod(rfmobpos_conds) / rfmobpos_conds(2);   % number of frames per movie
+	Xnew = 0;
+	Ynew = 0;						% variables to store mouse position
+    
+    rfmkeys = 20 : 24;              % key codes for keys used for changing stimuli
+	
+    rfmscreeninfo = get(0, 'MonitorPosition');
+    xoffset = rfmscreeninfo(2, 1);
+    yoffset = rfmscreeninfo(2, 2);
+    l = xoffset;
+    t = yoffset;
+    r = rfmscreeninfo(2, 3);
+    b = rfmscreeninfo(2, 4);
+% 	edge = 300;
+% 	clipl = l + edge;
+% 	clipr = r - edge;
+% 	clipt = t + edge;
+% 	clipb = b - edge;
+    dirs = getpref('MonkeyLogic', 'Directories');
+    system(sprintf('%smlhelper --cursor-enable', dirs.BaseDirectory));
+%     system(sprintf('%smlhelper --cursor-clip %i %i %i %i', dirs.BaseDirectory, clipl, clipt, clipr, clipb));
+	system(sprintf('%smlhelper --clicks-disable', dirs.BaseDirectory));
+	
+	if ~isempty(RFM_TASK) && RFM_TASK == 2								%return from escape screen
+		mlvideo('setmouse', [(l + r)/2 (t + b)/2]);						%set the mouse to the center of the screen on returning from escape screen
+	end
+	RFM_TASK = 1;					%required for check_keyboard
+	FIRST_FRAME = 1;
 end
 
 eyetrack = 0;
@@ -776,6 +828,9 @@ else
     trad1 = varargin{2};
 	if length(trad1) < length(tob1),
         trad1 = trad1 * ones(size(tob1));
+	end
+	if exist('Xnew', 'var')     % Hardcode fixation point as object # 1 in timing file 
+        tob1 = 1;
 	end
     maxtime = varargin{3};
     if strcmpi(fxn1, 'acquirefix'),
@@ -1101,6 +1156,72 @@ while t2 < maxtime,
         end
 	end
 	
+	if exist('Xnew', 'var')
+        rfmtarget = mlvideo('getmouse');
+		Xold = Xnew;
+		Yold = Ynew;
+        Xnew = (rfmtarget(1) - xoffset - ScreenData.Half_xs)/ScreenData.PixelsPerDegree;
+        Ynew = -(rfmtarget(2) - yoffset - ScreenData.Half_ys)/ScreenData.PixelsPerDegree;
+		changepos = Xold ~= Xnew || Yold ~= Ynew;
+		
+		if isempty(rfmobpos)                                                % which it is for the first trial
+			rfmobpos = zeros(1,length(rfmobpos_conds));						% current shape, rotation, size ratio, size, color of rfm object
+			mlvideo('setmouse', [(l + r)/2 (t + b)/2]);						% set the mouse to the center of the screen on the first trial
+		end
+		
+        rfmkeyflag = mlkbd('getkey');
+		if isempty(rfmkeyflag)
+			rfmkeyflag = 0;
+		end
+		if any(rfmkeyflag == rfmkeys)                                       %change shape, rotation, size ratio, size, color
+			changestim = 1;
+            rfmkeyflag = rfmkeyflag - 19;									% subtract 19 to index by desired object trait
+            if rfmkeyflag == 1
+				rfmobpos(3) = rfmobpos(3) - 1;                              % counter-clockwise rotation
+                if rfmobpos(3) < 0
+					rfmobpos(3) = rfmobpos_conds(3) - 1;                    % if not rotated, then rfmobpos(2) = 0
+                end
+            else
+                rfmobpos(rfmkeyflag) = rfmobpos(rfmkeyflag) + 1;                % advance desired property
+                if rfmobpos(rfmkeyflag) == rfmobpos_conds(rfmkeyflag)
+                rfmobpos(rfmkeyflag) = 0;
+                end
+            end
+		else
+			changestim = 0;
+		end
+		rfmframe = rfmobpos(1)*prod(rfmobpos_conds(2:5)) + rfmobpos(2)*prod(rfmobpos_conds(3:5)) + rfmobpos(3)*prod(rfmobpos_conds(4:5)) + rfmobpos(4)*rfmobpos_conds(5) + rfmobpos(5) + 1; %index to desired frame
+		
+		if FIRST_FRAME
+			reposition_object(rfmmov, Xnew, Ynew);
+            rfmframe = mod(rfmframe, numframespermov);
+			toggleobject(rfmmov, 'MovieStartFrame', rfmframe);				%frame ended on in previous trial/first frame for first trial
+			reposition_object(-1, TrialObject, ScreenData);					%convey start frame and position to reposition_object
+			videoupdates = 1;
+			FIRST_FRAME = 0;
+		end
+
+		if changepos
+			reposition_object(rfmmov, Xnew, Ynew);
+		end
+		
+		if changestim
+            mov = ceil(rfmframe / numframespermov) + 1;                     % +1 because fixation point is 1. Movies start at 2 in TrialObject structure.
+            rfmframe = mod(rfmframe, numframespermov);
+            if rfmmov == mov                                                % movie need not be changed
+                toggleobject(rfmmov, 'MovieStartFrame', rfmframe, 'Status', 'On');
+                reposition_object(-1, TrialObject, ScreenData);				% convey start frame to reposition_object
+            else                                                            % movie needs to be changed
+                reposition_object(rfmmov, Xnew, Ynew);                      % even thought it will be turned off, its position still needs to be updated.
+                toggleobject(rfmmov, 'Status', 'Off');                      % turn off old movie
+                rfmmov = mov;
+                reposition_object(rfmmov, Xnew, Ynew);                      % reposition new movie and turn it on
+                toggleobject(rfmmov, 'MovieStartFrame', rfmframe, 'Status', 'On');
+                reposition_object(-1, TrialObject, ScreenData);
+            end
+		end
+	end
+	
     if any(eyestatus) || any(joystatus) || any(bstatus),
         t = trialtime - t1;
         rt = round(t);
@@ -1234,21 +1355,21 @@ if ~earlybreak && ~idle,
     else %numsigs == 2
         if eyetrack && joytrack,
             if eyefirst,
-                ontarget = [eyeop*find(~eyestatus) joyop*find(~joystatus)];
+                ontarget = [eyeop*(find(~eyestatus))' joyop*(find(~joystatus))'];
             else
-                ontarget = [joyop*find(~joystatus) eyeop*find(~eyestatus)];
+                ontarget = [joyop*(find(~joystatus))' eyeop*(find(~eyestatus))'];
             end
         elseif eyetrack && buttontrack,
             if eyefirst,
-                ontarget = [eyeop*find(~eyestatus) buttonop*find(~bstatus)];
+                ontarget = [eyeop*(find(~eyestatus))' buttonop*(find(~bstatus))'];
             else
-                ontarget = [buttonop*find(~bstatus) eyeop*find(~eyestatus)];
+                ontarget = [buttonop*(find(~bstatus))' eyeop*(find(~eyestatus))'];
             end
         elseif joytrack && buttontrack,
             if joyfirst,
-                ontarget = [joyop*find(~joystatus) buttonop*find(~bstatus)];
+                ontarget = [joyop*(find(~joystatus))' buttonop*(find(~bstatus))'];
             else
-                ontarget = [buttonop*find(~bstatus) joyop*find(~joystatus)];
+                ontarget = [buttonop*(find(~bstatus))' joyop*(find(~joystatus))'];
             end
         end
     end
@@ -2173,7 +2294,7 @@ if ~isempty(DAQ.AnalogInput),
     while DAQ.AnalogInput.SamplesAvailable < MinSamplesExpected, end %changed by NS (03/28/2012)
     stop(DAQ.AnalogInput);
     data = getdata(DAQ.AnalogInput, DAQ.AnalogInput.SamplesAvailable);
-    axes(findobj('tag', 'replica'));
+    set(gcf, 'CurrentAxes', findobj('tag', 'replica'));
     if ~isempty(DAQ.Joystick) && ~SIMULATION_MODE,
         joyx = DAQ.Joystick.XChannelIndex;
         joyy = DAQ.Joystick.YChannelIndex;
