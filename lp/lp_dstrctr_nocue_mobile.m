@@ -5,7 +5,7 @@ start_spot = 1;
 targ1 = 2;
 targ2 = 4;
 
-editable( 'span', 'radius', 'reward' );
+editable( 'span', 'reward' );
 
 % Define Time Intervals (in ms):
 wait_press = 1000;
@@ -36,15 +36,16 @@ shift = span/2;
 
 theta = (span * rand(1,1))-shift; %Get Random Angle
 if theta < 0
-     theta = 360 - shift;
+     theta = 360 - theta;
 end
 
 theta = theta * pi/180;
-bhv_variable( 'theta', theta);
+bhv_variable( 'theta', theta );
 
 
 radius = randi(5); %Get Randum Radius between 1 and 5
 [new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to polar coordinates
+bhv_variable( 'radius', radius );
 
 if isfield(TrialRecord, 'theta')
     thetas = TrialRecord.theta;
