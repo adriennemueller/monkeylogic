@@ -34,9 +34,9 @@ end
 span = 180; 
 shift = span/2;
 
-theta = (span * rand(1,1))-shift; %Get Random Angle
+theta = randi(span)-shift; %Get Random Angle
 if theta < 0
-     theta = 360 - theta;
+     theta = 360 + theta;
 end
 
 theta = theta * pi/180;

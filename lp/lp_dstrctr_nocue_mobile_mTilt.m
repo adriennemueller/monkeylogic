@@ -2,10 +2,9 @@
 
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;
-targ1 = 2;
-targ1new = 3;
-targ2 = 4;
-targ2new = 5;
+targ1 = 2; targ1new = 3;
+targ2 = 4; targ2new = 5;
+
 editable( 'span', 'reward' );
 
 % Define Time Intervals (in ms):
@@ -21,9 +20,6 @@ reward = 200;
 %t2_tilt1 = randi(360);
 t1_tilt1 = randi(10);
 t2_tilt1 = randi(10);
-
-disp( ['<<< MonkeyLogic >>> Targ1 Tilt1: ' num2str(t1_tilt1)]);
-disp( ['<<< MonkeyLogic >>> Targ2 Tilt1: ' num2str(t2_tilt1)]);
 
 % Generate 'tilted frames' for target
 %tilt1 = randi(90); valence1 = randi(2);
@@ -42,10 +38,6 @@ else
     t2_tilt2 = t2_tilt1 - tilt2;
 end
 
-disp( ['<<< MonkeyLogic >>> Targ1 Tilt2: ' num2str(t1_tilt2)]);
-disp( ['<<< MonkeyLogic >>> Targ2 Tilt2: ' num2str(t2_tilt2)]);
-
-
 
 if t1_tilt2 > 359
     t1_tilt2 = t1_tilt2 - 359;
@@ -58,9 +50,6 @@ if t2_tilt2 > 359
 elseif t2_tilt2 < 0
     t2_tilt2 = 359 + t2_tilt2;
 end
-
-disp( ['<<< MonkeyLogic >>> Targ1 Tilt2 Post-Correction: ' num2str(t1_tilt2)]);
-disp( ['<<< MonkeyLogic >>> Targ2 Tilt2 Post-Correction: ' num2str(t2_tilt2)]);
 
 
 %Select which of the four combinations the two targets will display as
@@ -86,8 +75,6 @@ bhv_variable( 'targ2_tilt1', t2_tilt1 );
 bhv_variable( 'targ2_tilt2', t2_tilt2 );
 
 
-
-
 %Reposition Objects to New Locations
 span = 180; 
 shift = span/2;
@@ -96,22 +83,15 @@ theta = randi(span)-shift; %Get Random Angle
 if theta < 0
      theta = 360 + theta;
 end
-disp( ['<<< MonkeyLogic >>> THETA in Deg: ' num2str(theta)]);
 
 theta = theta * pi/180;
-disp( ['<<< MonkeyLogic >>> THETA * pi/180: ' num2str(theta)]);
 bhv_variable( 'theta', theta );
-
 
 %radius = randi(5); %Get Randum Radius between 1 and 5
 radius = 1 + randi(3); %Radius between 2 and 4;
 bhv_variable( 'radius', radius );
 
 [new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to cartesian coordinates
-
-disp( ['<<< MonkeyLogic >>> New X : ' new_targ_xpos]);
-disp( ['<<< MonkeyLogic >>> New Y : ' new_targ_ypos]);
-
 
 if isfield(TrialRecord, 'theta')
     thetas = TrialRecord.theta;
@@ -153,9 +133,6 @@ end
 % Turn on Targets
 toggleobject([targ1 targ2], 'MovieStartFrame', [t1_tilt1 t2_tilt1], 'MovieStep', 0, 'eventmarker', 121);
 
-disp( ['<<< MonkeyLogic TARGETS ON >>> Targ1 Tilt1 Post-Decision: ' num2str(t1_tilt1)]);
-disp( ['<<< MonkeyLogic TARGETS ON >>> Targ2 Tilt1 Post-Decision: ' num2str(t2_tilt1)]);
-
 % Tests lever remains pressed
 held = eyejoytrack('holdtouch', 1, [], hold_time);
 if ~held,
@@ -168,9 +145,6 @@ end
 % Change targets or distractors (different or the same)
 toggleobject([targ1 targ2]);
 toggleobject([targ1new targ2new], 'MovieStartFrame', [t1_tilt2 t2_tilt2], 'MovieStep', 0);
-
-disp( ['<<< MonkeyLogic NEW TARGETS ON >>> Targ1 Tilt2 Post-Decision: ' num2str(t1_tilt2)]);
-disp( ['<<< MonkeyLogic NEW TARGETS ON >>> Targ2 Tilt2 Post-Decision: ' num2str(t2_tilt2)]);
 
 % Wait for release
 released = ~eyejoytrack('holdtouch', 1, [], wait_release);
