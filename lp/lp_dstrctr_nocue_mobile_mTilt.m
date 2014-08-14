@@ -19,8 +19,8 @@ reward = 200;
 % Generate 'start frames' for initial target presentations
 %t1_tilt1 = randi(360);
 %t2_tilt1 = randi(360);
-t1_tilt1 = 80 + randi(10);
-t2_tilt1 = 80 + randi(10);
+t1_tilt1 = randi(10);
+t2_tilt1 = randi(10);
 
 disp( ['<<< MonkeyLogic >>> Targ1 Tilt1: ' num2str(t1_tilt1)]);
 disp( ['<<< MonkeyLogic >>> Targ2 Tilt1: ' num2str(t2_tilt1)]);
@@ -92,20 +92,26 @@ bhv_variable( 'targ2_tilt2', t2_tilt2 );
 span = 180; 
 shift = span/2;
 
-theta = (span * rand(1,1))-shift; %Get Random Angle
+theta = randi(span)-shift; %Get Random Angle
 if theta < 0
-     theta = 360 - theta;
+     theta = 360 + theta;
 end
+disp( ['<<< MonkeyLogic >>> THETA in Deg: ' num2str(theta)]);
 
 theta = theta * pi/180;
+disp( ['<<< MonkeyLogic >>> THETA * pi/180: ' num2str(theta)]);
 bhv_variable( 'theta', theta );
 
 
 %radius = randi(5); %Get Randum Radius between 1 and 5
 radius = 1 + randi(3); %Radius between 2 and 4;
-
-[new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to polar coordinates
 bhv_variable( 'radius', radius );
+
+[new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to cartesian coordinates
+
+disp( ['<<< MonkeyLogic >>> New X : ' new_targ_xpos]);
+disp( ['<<< MonkeyLogic >>> New Y : ' new_targ_ypos]);
+
 
 if isfield(TrialRecord, 'theta')
     thetas = TrialRecord.theta;
@@ -130,8 +136,6 @@ success = reposition_object(targ2new, (-1 * new_targ_xpos), (-1 * new_targ_ypos)
 
 
 
-
-
 %%%%%%%%% TASK %%%%%%%%
 
 % Show Fixation Spot, Cues the Beginning of a Trial:
@@ -149,6 +153,9 @@ end
 % Turn on Targets
 toggleobject([targ1 targ2], 'MovieStartFrame', [t1_tilt1 t2_tilt1], 'MovieStep', 0, 'eventmarker', 121);
 
+disp( ['<<< MonkeyLogic TARGETS ON >>> Targ1 Tilt1 Post-Decision: ' num2str(t1_tilt1)]);
+disp( ['<<< MonkeyLogic TARGETS ON >>> Targ2 Tilt1 Post-Decision: ' num2str(t2_tilt1)]);
+
 % Tests lever remains pressed
 held = eyejoytrack('holdtouch', 1, [], hold_time);
 if ~held,
@@ -161,6 +168,9 @@ end
 % Change targets or distractors (different or the same)
 toggleobject([targ1 targ2]);
 toggleobject([targ1new targ2new], 'MovieStartFrame', [t1_tilt2 t2_tilt2], 'MovieStep', 0);
+
+disp( ['<<< MonkeyLogic NEW TARGETS ON >>> Targ1 Tilt2 Post-Decision: ' num2str(t1_tilt2)]);
+disp( ['<<< MonkeyLogic NEW TARGETS ON >>> Targ2 Tilt2 Post-Decision: ' num2str(t2_tilt2)]);
 
 % Wait for release
 released = ~eyejoytrack('holdtouch', 1, [], wait_release);
