@@ -1,6 +1,6 @@
 function movie = make_rotating_rect( Rwidth, Rheight )
     rect = rgb(make_rect( Rwidth, Rheight ));
-    movie = make_rotating_movie( rect, 359 );
+    movie = make_rotating_movie( rect, 71 );
 end
 
 function movie = make_rotating_movie( I, nFrames )
@@ -9,6 +9,7 @@ function movie = make_rotating_movie( I, nFrames )
 
     for angle = step : step : (360 - step)
         frame = imrotate(I, angle, 'bicubic', 'crop');
+        imwrite( frame, ['rect_' num2str(round(angle)) '.jpeg'] );
         movie = cat(4, movie, frame);
     end
 end
