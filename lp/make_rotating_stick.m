@@ -9,7 +9,7 @@ function movie = make_rotating_movie( I, nFrames )
 
     for angle = step : step : (360 - step)
         frame = imrotate(I, angle, 'bicubic', 'crop');
-        imwrite( frame, ['rect_' num2str(round(angle)) '.jpeg'] );
+        %imwrite( frame, ['rect_' num2str(round(angle)) '.jpeg'] );
         movie = cat(4, movie, frame);
     end
 end
@@ -33,6 +33,6 @@ end
 function I = rgb( I )
     I = double(I);
     if size(I, 3) == 1
-        I = repmat(I, 1, 1, 3);
+        I = repmat(I, [1 1 3]);
     end
 end
