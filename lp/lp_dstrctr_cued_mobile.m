@@ -14,7 +14,7 @@ hold_time_postcue = 300;
 wait_release = 1000;
 
 % Define Reward Duration
-reward = 800;
+reward = 200;
 
 %Select which of the four combinations the two targets will display as
 % 1-3 - neither changes, 4 - 1 changes, 5 - the other changes, 6 - both
@@ -25,40 +25,6 @@ if comb <=1
 elseif comb == 2
     targ1new = 3; targ2new = 4; eventmarker(133); % First Change
 end
-
-
-%Reposition Objects to New Locations
-span = 360; 
-theta = randi(span); %Get Random Angle
-frame = theta; %Frame for Cue
-theta = theta * pi/180;
-bhv_variable( 'theta', theta );
-
-
-radius = 3; %randi(5); %Get Randum Radius between 1 and 5
-[new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to polar coordinates
-bhv_variable( 'radius', radius );
-
-if isfield(TrialRecord, 'theta')
-    thetas = TrialRecord.theta;
-    thetas = [thetas theta];
-else
-    TrialRecord.theta = [];
-end
-
-if isfield(TrialRecord, 'radius')
-    radii = TrialRecord.radius;
-    radii = [radii radius];
-else
-    TrialRecord.radius = [];
-end
-
-success = reposition_object(targ1, new_targ_xpos, new_targ_ypos);
-success = reposition_object(targ1new, new_targ_xpos, new_targ_ypos);
-
-%Mirror Distractor to Opposing Coordinates
-success = reposition_object(targ2, (-1 * new_targ_xpos), (-1 * new_targ_ypos));
-success = reposition_object(targ2new, (-1 * new_targ_xpos), (-1 * new_targ_ypos));
 
 
 
@@ -91,7 +57,7 @@ if ~held,
 end
 
 % Turn on Cue
-toggleobject(cue, 'MovieStartFrame', frame, 'MovieStep', 0, 'eventmarker', 131); % Cue on
+toggleobject(cue,'eventmarker', 131); % Cue on
 
 % Keep Lever Pressed while Cue is on
 held = eyejoytrack('holdtouch', 1, [], hold_time_postcue);

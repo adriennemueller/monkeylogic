@@ -1,6 +1,6 @@
 function movie = make_rotating_stick( Rwidth, Rheight )
     rect = rgb(make_rect( Rwidth, Rheight ));
-    movie = make_rotating_movie( rect, 359 ); % Use 359 for 1deg steps
+    movie = make_rotating_movie( rect, 7 ); % Use 359 for 1deg steps
 end
 
 function movie = make_rotating_movie( I, nFrames )
@@ -9,7 +9,7 @@ function movie = make_rotating_movie( I, nFrames )
 
     for angle = step : step : (360 - step)
         frame = imrotate(I, angle, 'bicubic', 'crop');
-        %imwrite( frame, ['rect_' num2str(round(angle)) '.jpeg'] );
+        %imwrite( frame, ['stick_' num2str(round(angle)) '.jpeg'] );
         movie = cat(4, movie, frame);
     end
 end
