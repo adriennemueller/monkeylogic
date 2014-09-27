@@ -15,16 +15,16 @@ function movie = make_rotating_movie( I, nFrames )
 end
 
 function img = make_rect( Rwidth, Rheight )
-    Iwidth =  (ceil(sqrt(Rwidth^2 + Rheight^2))) *2;
+    Iwidth =  (ceil(sqrt(Rwidth^2 + Rheight^2)) *2) + 4;
     Iheight = Iwidth;
-
+    
     % Define the image size for the background
     img = false(Iwidth, Iheight);
 
     % Make the rectangle
     left   = floor(Iwidth/2  - Rwidth/2);
     right  = floor(Iwidth/2  + Rwidth/2);
-    top    = floor(Iheight/2);
+    top    = floor(Iheight/2 -1);
     bottom = floor(Iheight/2 + Rheight);
 
     img(left:right, top:bottom) = true;
