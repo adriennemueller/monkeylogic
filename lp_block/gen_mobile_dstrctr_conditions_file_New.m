@@ -1,4 +1,4 @@
-function gen_mobile_dstrctr_conditions_file( filename )
+function gen_mobile_dstrctr_conditions_file_New( filename, b_span, b_overlap )
     path( path, '../' );
 
     fid = fopen(filename, 'w');
@@ -6,104 +6,124 @@ function gen_mobile_dstrctr_conditions_file( filename )
     textline = generate_condition('Header', 5, 'FID', fid);
     fprintf(fid,  '%s\n');
 
-		
-	row = [1:36];
-	tmat = repmat( row, 36, 1);
-	tmat = tmat .* 5;	
-	
 	cond = 0;
 	
-    for i = 1:5
-		t1 = tmat(1,i);
-		
-		for j = 1:5
-			if (j == i)
-			continue
-			end
-
-			t1new = tmat(i,j);
-
-			for k = 1:5
-				t2 = tmat(1,k);
-				
-				for l = 1:5
-					if (l == k)
-					continue
-					end
-					
-					t2new = tmat(k,l);
-					
-					%disp( ['T1: ' num2str(tmat(1,i)) ' T1new: ' num2str(tmat(i,j)) ' T2: ' num2str(tmat(1,k)) ' T2new: ' num2str(tmat(1,k)) ] );
-					disp( ['T1: ' num2str(t1) ' T1new: ' num2str(t1new) ' T2: ' num2str(t2) ' T2new: ' num2str(t2new) ] );
-					
-					for m = 1:3
-						if m == 1
-							t1new = t1; t2new = t2; % No Change
-							s.t_info = 'Same';
-							freq = 2;
-							%disp( ['SAME: T1: ' num2str(t1) ' T1new: ' num2str(t1new) ' T2: ' num2str(t2) ' T2new: ' num2str(t2new) ] );
-
-						elseif m == 2
-							t2new = t2; % First Change
-							s.t_info = 'T1 Change';
-							freq = 1;
-							%disp( ['T1 CHANGE: T1: ' num2str(t1) ' T1new: ' num2str(t1new) ' T2: ' num2str(t2) ' T2new: ' num2str(t2new) ] );
-						
-						elseif m == 3
-							t1new = t1; % Second Change
-							s.t_info = 'T2 Change';
-							freq = 1;
-							%disp( ['T2 CHANGE: T1: ' num2str(t1) ' T1new: ' num2str(t1new) ' T2: ' num2str(t2) ' T2new: ' num2str(t2new) ] );
-
-						end
-						
-						cond = cond+1;
-
-					    TaskObject(1).Type = 'Fix';
-						TaskObject(1).Arg{1} = 0;
-						TaskObject(1).Arg{2} = 0;
-
-						TaskObject(2).Type = 'Pic';
-						TaskObject(2).Arg{1} = ['rect_' num2str(t1)];
-						TaskObject(2).Arg{2} = 1;
-						TaskObject(2).Arg{3} = 3;
-						TaskObject(2).Arg{4} = 150;
-						TaskObject(2).Arg{5} = 150;
-
-						TaskObject(3).Type = 'Pic';
-						TaskObject(3).Arg{1} = ['rect_' num2str(t1new)];
-						TaskObject(3).Arg{2} = 1;
-						TaskObject(3).Arg{3} = 3;
-						TaskObject(3).Arg{4} = 150;
-						TaskObject(3).Arg{5} = 150;
-
-						TaskObject(4).Type = 'Pic';
-						TaskObject(4).Arg{1} = ['rect_' num2str(t2)];
-						TaskObject(4).Arg{2} = 1;
-						TaskObject(4).Arg{3} = -3;
-						TaskObject(4).Arg{4} = 150;
-						TaskObject(4).Arg{5} = 150;
-
-						TaskObject(5).Type = 'Pic';
-						TaskObject(5).Arg{1} = ['rect_' num2str(t2new)];
-						TaskObject(5).Arg{2} = 1;
-						TaskObject(5).Arg{3} = -3;
-						TaskObject(5).Arg{4} = 150;
-						TaskObject(5).Arg{5} = 150;
-
-						textline = generate_condition('Condition', cond, 'Block', 1, 'Frequency', freq, 'TimingFile', 'lp_dstrctr_nocue_mobile_blank', 'Info', s, 'TaskObject', TaskObject, 'FID', fid);
-
-						
-					end
-					
-				end
-				
-			end
-					
-		end
-			
-	end
+    
+    step = 5;
+    N = 25;
+    
+    for tar1_start = 0:step:N
+        for tar1_end = 0:step:N
+            if tar1_start == tar1_end
+                continue
+            end
+            
+            for tar2_start = 0:step:N
+                for tar2_end = 0:step:N
+                    if tar2_start == tar2_end
+                        continue
+                    end
+                    
+                    cond = cond + 1;
+                    
+                    %block = get_block( tar1_start, tar1_end, tar2_start, tar2_end );
+                    s.t_info = 'Same';
+                    make_condition(tar1_start, tar1_start, tar2_start, tar2_start, cond, 1, 2, s, fid);
+                    
+                    blocks = get_blocks( b_span, b_overlap, tar1_start, tar1_end );
+                    s.t_info = 'T1 Change';
+                    make_condition(tar1_start, tar1_end, tar2_start, tar2_start, cond, blocks, 1, s, fid);
+                    
+                    blocks = get_blocks( b_span, b_overlap, tar2_start, tar2_end );
+                    s.t_info = 'T2 Change';
+                    make_condition(tar1_start, tar1_start, tar2_start, tar2_end, cond, blocks, 1, s, fid);
+                    
+                end
+            end
+        end
+    end
 
     fclose(fid);
 
 end
+
+function blocks = get_blocks( span, overlap, t_s, t_e )
+
+%  |-- span --|
+%  {------[---}------]------------
+%         |---|
+%        overlap
+
+    change = abs(t_s - t_e);
+    change = min([change (180 - change)]);
+    
+        
+    num_blocks = ceil(90/(span - overlap));
+
+    if change == 0
+        blocks = [1:num_blocks];
+        return
+    end
+    
+    blocks = [];
+    for i = num_blocks:-1:1
+        block_start = (span - overlap) * (i - 1);
+        block_end = block_start + span;
+        if (block_start <= change) && (change <= block_end)
+            blocks = [blocks (num_blocks +1 - i)];
+        end
+    end
+   
+    disp( ['Change: ' num2str(change) ' Blocks: ' num2str(blocks)] );
+end
+
+function make_condition(t1_s, t1_e, t2_s, t2_e, cond, block, freq, s, fid)
+
+    TaskObject(1).Type = 'Fix';
+    TaskObject(1).Arg{1} = 0;
+    TaskObject(1).Arg{2} = 0;
+
+    TaskObject(2).Type = 'Pic';
+    TaskObject(2).Arg{1} = ['rect_' num2str(t1_s)];
+    TaskObject(2).Arg{2} = 1;
+    TaskObject(2).Arg{3} = 3;
+    TaskObject(2).Arg{4} = 150;
+    TaskObject(2).Arg{5} = 150;
+
+    TaskObject(3).Type = 'Pic';
+    TaskObject(3).Arg{1} = ['rect_' num2str(t1_e)];
+    TaskObject(3).Arg{2} = 1;
+    TaskObject(3).Arg{3} = 3;
+    TaskObject(3).Arg{4} = 150;
+    TaskObject(3).Arg{5} = 150;
+
+    TaskObject(4).Type = 'Pic';
+    TaskObject(4).Arg{1} = ['rect_' num2str(t2_s)];
+    TaskObject(4).Arg{2} = 1;
+    TaskObject(4).Arg{3} = -3;
+    TaskObject(4).Arg{4} = 150;
+    TaskObject(4).Arg{5} = 150;
+
+    TaskObject(5).Type = 'Pic';
+    TaskObject(5).Arg{1} = ['rect_' num2str(t2_e)];
+    TaskObject(5).Arg{2} = 1;
+    TaskObject(5).Arg{3} = -3;
+    TaskObject(5).Arg{4} = 150;
+    TaskObject(5).Arg{5} = 150;
+
+    disp(['T1: ' num2str(t1_s) ' -> ' num2str(t1_e) '    T2: ' num2str(t2_s) ' -> ' num2str(t2_e) ]);
+    
+    generate_condition(...
+        'Condition', cond, ...
+        'Block', block, ...
+        'Frequency', freq, ...
+        'TimingFile', 'lp_dstrctr_nocue_mobile_blank', ...
+        'Info', s, ...
+        'TaskObject', TaskObject, ...
+        'FID', fid);
+
+end
+
+
+
+
