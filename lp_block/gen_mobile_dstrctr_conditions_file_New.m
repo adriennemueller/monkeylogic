@@ -10,7 +10,7 @@ function gen_mobile_dstrctr_conditions_file_New( filename, b_span, b_overlap )
 	
     
     step = 5;
-    N = 25;
+    N = 175;
     
     for tar1_start = 0:step:N
         for tar1_end = 0:step:N
@@ -19,26 +19,19 @@ function gen_mobile_dstrctr_conditions_file_New( filename, b_span, b_overlap )
             end
             
             for tar2_start = 0:step:N
-                for tar2_end = 0:step:N
-                    if tar2_start == tar2_end
-                        continue
-                    end
-                    
-                    cond = cond + 1;
-                    
-                    %block = get_block( tar1_start, tar1_end, tar2_start, tar2_end );
-                    s.t_info = 'Same';
-                    make_condition(tar1_start, tar1_start, tar2_start, tar2_start, cond, 1, 2, s, fid);
-                    
-                    blocks = get_blocks( b_span, b_overlap, tar1_start, tar1_end );
-                    s.t_info = 'T1 Change';
-                    make_condition(tar1_start, tar1_end, tar2_start, tar2_start, cond, blocks, 1, s, fid);
-                    
-                    blocks = get_blocks( b_span, b_overlap, tar2_start, tar2_end );
-                    s.t_info = 'T2 Change';
-                    make_condition(tar1_start, tar1_start, tar2_start, tar2_end, cond, blocks, 1, s, fid);
-                    
-                end
+				
+				cond = cond + 1;
+				block = get_blocks( b_span, b_overlap, tar1_start, tar1_start );
+				s.t_info = 'Same';
+				make_condition(tar1_start, tar1_start, tar2_start, tar2_start, cond, 1, 2, s, fid);
+				
+				cond = cond + 1;
+				blocks = get_blocks( b_span, b_overlap, tar1_start, tar1_end );
+				s.t_info = 'T1 Change';
+				make_condition(tar1_start, tar1_end, tar2_start, tar2_start, cond, blocks, 1, s, fid);
+                
+                
+            
             end
         end
     end
@@ -74,7 +67,7 @@ function blocks = get_blocks( span, overlap, t_s, t_e )
         end
     end
    
-    disp( ['Change: ' num2str(change) ' Blocks: ' num2str(blocks)] );
+    %disp( ['Change: ' num2str(change) ' Blocks: ' num2str(blocks)] );
 end
 
 function make_condition(t1_s, t1_e, t2_s, t2_e, cond, block, freq, s, fid)
@@ -111,7 +104,7 @@ function make_condition(t1_s, t1_e, t2_s, t2_e, cond, block, freq, s, fid)
     TaskObject(5).Arg{4} = 150;
     TaskObject(5).Arg{5} = 150;
 
-    disp(['T1: ' num2str(t1_s) ' -> ' num2str(t1_e) '    T2: ' num2str(t2_s) ' -> ' num2str(t2_e) ]);
+    %disp(['T1: ' num2str(t1_s) ' -> ' num2str(t1_e) '    T2: ' num2str(t2_s) ' -> ' num2str(t2_e) ]);
     
     generate_condition(...
         'Condition', cond, ...
