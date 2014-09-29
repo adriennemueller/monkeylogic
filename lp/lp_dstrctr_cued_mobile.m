@@ -5,16 +5,17 @@ start_spot = 1;
 targ1 = 2;
 targ2 = 4;
 cue = 6;
-editable( 'span', 'reward' );
+editable( 'reward' );
 
 % Define Time Intervals (in ms):
 wait_press = 1000;
-hold_time = 200;
-hold_time_postcue = 300;
+hold_time = 300;
+hold_time_postcue = 400;
+blank_time = 20;
 wait_release = 1000;
 
 % Define Reward Duration
-reward = 200;
+reward = 300;
 
 %Select which of the four combinations the two targets will display as
 % 1-3 - neither changes, 4 - 1 changes, 5 - the other changes, 6 - both
@@ -68,9 +69,18 @@ if ~held,
     return
 end
 
+% Blank Targets
+toggleobject([targ1 targ2], 'eventmarker',134);
+held = eyejoytrack('holdtouch', 1, [], blank_time);
+if ~held,
+    toggleobject([start_spot cue], 'eventmarker', 135); % Turn off cue
+    trialerror(2); % Released too early
+    idle(200, [1, 0, 0]); % Red Error Screen
+    return
+end
 
 % Change targets or distractors (different or the same)
-toggleobject([targ1 targ2 targ1new targ2new]);
+toggleobject([targ1new targ2new]);
 
 % Wait for release
 released = ~eyejoytrack('holdtouch', 1, [], wait_release);
