@@ -52,7 +52,7 @@ function gen_mobile_dstrctr_conditions_file( numTrials, filename )
         TaskObject(5).Arg{4} = 150;
         TaskObject(5).Arg{5} = 150;
 
-        textline = generate_condition('Condition', i, 'Block', 1, 'Frequency', 1, 'TimingFile', 'lp_dstrctr_nocue_mobile', 'TaskObject', TaskObject, 'FID', fid);
+        textline = generate_condition('Condition', i, 'Block', 1, 'Frequency', 1, 'TimingFile', 'lp_dstrctr_nocue_mobile_blank', 'TaskObject', TaskObject, 'FID', fid);
     end
     
     fclose(fid);
