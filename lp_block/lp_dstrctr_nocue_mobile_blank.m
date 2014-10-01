@@ -20,53 +20,23 @@ reward = 300;
 
 tmpstruct = TrialRecord.CurrentConditionStimulusInfo;
 
-class(tmpstruct{2}.Name)
-
-%t = [tmpstruct{2}.Name]
-%class(t)
-
 tmpstruct{2}.Name
 tmpstruct{3}.Name
 tmpstruct{4}.Name
 tmpstruct{5}.Name
  
- % if (tmpstruct{2}.Name == tmpstruct{3}.Name) | (tmpstruct{4}.Name == tmpstruct{5}.Name)
- % disp('Not strings.');
- % end
  
- % if strcmp(tmpstruct{2}.Name, tmpstruct{3}.Name) | strcmp(tmpstruct{4}.Name, tmpstruct{5}.Name)
- % disp('Strings.');
- % end
- 
-if strcmp(tmpstruct{2}.Name, tmpstruct{3}.Name) && strcmp(tmpstruct{4}.Name, tmpstruct{5}.Name)
-	comb = 2; eventmarker(132); %No Change
-	disp('Comb = 2');
-elseif ~strcmp(tmpstruct{2}.Name, tmpstruct{3}.Name) && strcmp(tmpstruct{4}.Name, tmpstruct{5}.Name)
-	comb = 3; eventmarker(133); %First Change
-	disp('Comb = 3');
-elseif strcmp(tmpstruct{2}.Name, tmpstruct{3}.Name) && ~strcmp(tmpstruct{4}.Name, tmpstruct{5}.Name)
-	comb = 4; eventmarker(134); %Second Change
-	disp('Comb = 4');
-else
-	disp('Comb = ???');
+if strcmp(tmpstruct{2}.Name, tmpstruct{3}.Name)
+	comb = 1; eventmarker(132); %No Change
+	%disp('Comb = 1, ' 'T1: ' [tmpstruct{2}.Name] ' T1 New: ' [tmpstruct{3}.Name] ' T2: ' [tmpstruct{4}.Name] ' T2 New: ' [tmpstruct{5}.Name] );
+elseif ~strcmp(tmpstruct{2}.Name, tmpstruct{3}.Name) 
+	comb = 2; eventmarker(133); %First Change
+	%disp('Comb = 2, ' 'T1: ' [tmpstruct{2}.Name] ' T1 New: ' [tmpstruct{3}.Name] ' T2: ' [tmpstruct{4}.Name] ' T2 New: ' [tmpstruct{5}.Name]);
 end
-
-% if (tmpstruct{2}.Name == tmpstruct{3}.Name) && (tmpstruct{4}.Name == tmpstruct{5}.Name)
-	% comb = 2; eventmarker(132); %No Change
-	% disp('NS Comb = 2');
-% elseif (tmpstruct{2}.Name ~= tmpstruct{3}.Name) && (tmpstruct{4}.Name == tmpstruct{5}.Name)
-	% comb = 3; eventmarker(133); %First Change
-	% disp('NS Comb = 3');
-% elseif (tmpstruct{2}.Name == tmpstruct{3}.Name) && (tmpstruct{4}.Name ~= tmpstruct{5}.Name)
-	% comb = 4; eventmarker(134); %Second Change
-	% disp('NS Comb = 4');
-% else
-	% disp('NS Comb = ???');
-% end
 
 
 %Reposition Objects to New Locations
-span = 180; 
+span = 360; 
 shift = span/2;
 
 theta = randi(span)-shift; %Get Random Angle
@@ -146,14 +116,14 @@ toggleobject([targ1new targ2new]);
 % Wait for release
 released = ~eyejoytrack('holdtouch', 1, [], wait_release);
 
-if (released && (comb <= 2))
+if (released && (comb == 1))
     toggleobject([start_spot targ1new targ2new], 'eventmarker', 127); %Turn off fixation spot and targets
     trialerror(3); % Released when should not have
     idle(1500, [1, 0, 0]); % Red Error Screen
     return
 end
 
-if (~released && (comb >= 3))
+if (~released && (comb == 2))
     toggleobject([start_spot targ1new targ2new], 'eventmarker', 128); %Turn off fixation spot and targets
     trialerror(4); % Did not release in time
     idle(1500, [1, 0, 0]); % Red Error Screen
@@ -162,4 +132,6 @@ end
 
 toggleobject([start_spot targ1new targ2new], 'eventmarker', 124); %Turn off fixation spot and targets
 trialerror(0); % Correct
-goodmonkey(reward); % Reward
+
+% Reward
+goodmonkey(reward);
