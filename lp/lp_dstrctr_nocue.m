@@ -10,6 +10,10 @@ wait_press = 1000;
 hold_time = 400;
 wait_release = 1000;
 
+editable( 'reward' );
+
+reward = 400;
+
 %Select which of the four combinations the two targets will display as
 % 1-3 - neither changes, 4 - 1 changes, 5 - the other changes, 6 - both
 % change
@@ -73,4 +77,4 @@ end
 
 toggleobject([start_spot targ1new targ2new], 'eventmarker', 124); %Turn off fixation spot and targets
 trialerror(0); % Correct
-goodmonkey(200); % Reward
+goodmonkey(reward); % Reward

@@ -67,5 +67,5 @@ end
 
 toggleobject(targ2, 'eventmarker', 124); %Turn off target
 trialerror(0); % Correct
-goodmonkey(50); % Reward
+goodmonkey(500); % Reward
 
