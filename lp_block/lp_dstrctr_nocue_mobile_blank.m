@@ -20,12 +20,6 @@ reward = 300;
 
 tmpstruct = TrialRecord.CurrentConditionStimulusInfo;
 
-tmpstruct{2}.Name
-tmpstruct{3}.Name
-tmpstruct{4}.Name
-tmpstruct{5}.Name
- 
- 
 if strcmp(tmpstruct{2}.Name, tmpstruct{3}.Name)
 	comb = 1; eventmarker(132); %No Change
 	%disp('Comb = 1, ' 'T1: ' [tmpstruct{2}.Name] ' T1 New: ' [tmpstruct{3}.Name] ' T2: ' [tmpstruct{4}.Name] ' T2 New: ' [tmpstruct{5}.Name] );
@@ -79,6 +73,7 @@ success = reposition_object(targ2new, (-1 * new_targ_xpos), (-1 * new_targ_ypos)
 
 % Show Fixation Spot, Cues the Beginning of a Trial:
 toggleobject(start_spot, 'eventmarker', 120) % Fixation Spot Shown
+
 
 % Waits for press
 pressed = eyejoytrack('acquiretouch', 1, [], wait_press); % Here '1' =button/lever index, not the target

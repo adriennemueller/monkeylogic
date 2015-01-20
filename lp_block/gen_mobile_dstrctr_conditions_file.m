@@ -1,4 +1,4 @@
-function gen_mobile_dstrctr_conditions_file_New( filename, b_span, b_overlap, nTrials )
+function gen_mobile_dstrctr_conditions_file( filename, b_span, b_overlap, nTrials )
     path( path, '../' );
 
     fid = fopen(filename, 'w');
@@ -25,9 +25,6 @@ function gen_mobile_dstrctr_conditions_file_New( filename, b_span, b_overlap, nT
 		%blocks = get_blocks( b_span, b_overlap, tar1_start, tar1_start );
 		s.t_info = 'Same';
 		make_condition(tar1_start, tar1_start, tar2, tar2, cond, blocks, 1, s, fid);
-		
-
-	
 	
     end
     % step = 5;
