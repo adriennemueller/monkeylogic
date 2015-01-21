@@ -1,0 +1,10 @@
+Condition	Frequency	Block	Timing File	TaskObject#1	
+1	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, 0, 4)		
+2	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, 4, 0)	
+3	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, 0, -4)	
+4	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, -4, 0)	
+5	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, 2.5, 2.5)		
+6	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, -2.5, 2.5)		
+7	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, -2.5, -2.5)	
+8	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, 2.5, -2.5)
+9	1	1	sacc_task_no_fix	crc(0.4, [1 1 1], 1, 0, 0)		
