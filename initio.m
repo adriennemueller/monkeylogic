@@ -9,7 +9,7 @@ function [DAQ, DaqError] = initio(IO)
 
 %for manual editing:
 configIO.AI.BufferingConfig =  [16 1024]; %[1 2000];
-configIO.AI.InputRange = [-10 10];
+configIO.AI.InputRange = [-5 5];
 configIO.Reward.TriggerValue = 5; %if analog, number of volts to trigger or hold at (will be "1" if digital).
 
 %from menu:
