@@ -7,7 +7,7 @@ targ1new = 3;
 targ2 = 4;
 targ2new = 5;
 
-editable( 'span', 'reward', 'fix_radius', 'wait_release', 'hold_time', 'pre_hold_time', 'blank_time' );
+editable( 'span', 'reward', 'fix_radius', 'wait_release', 'hold_time', 'pre_hold_time', 'blank_time', 'spec_theta', 'radius' );
 
 % Define Time Intervals (in ms):
 wait_for_fix = 1000;
@@ -18,6 +18,7 @@ blank_time = 20;
 wait_release = 1000;
 
 fix_radius = 1.3;
+spec_theta = 0; % No special direction by default.
 
 % Define Reward Duration
 reward = 300;
@@ -35,13 +36,27 @@ bhv_variable( 'comb', comb );
 %Reposition Objects to New Locations
 span = 360; 
 shift = span/2;
+Preferred = randi([0, 1], 1, 1); % Decide whether it will be a preferred or non-preferred direction trial.
 
-theta = randi(span)-shift; %Get Random Angle
-if theta < 0
-     theta = 360 + theta;
+if spec_theta
+	if Preferred
+		theta = spec_theta;
+	elseif ~Preferred
+		if spec_theta < 180
+			theta = spec_theta + 180;
+		elseif spec_theta > 180
+			theta = spec_theta - 180;
+		end
+	end
+else
+	theta = randi(span)-shift; %Get Random Angle
 end
 
+if theta < 0
+	theta = 360 + theta;
+end
 theta = theta * pi/180;
+
 bhv_variable( 'theta', theta );
 
 
