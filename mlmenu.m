@@ -2910,7 +2910,7 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                     return
                 end
                 
-                avports = AdatorInfo(boardnum).AvailablePorts{subsysnum};
+                avports = AdaptorInfo(boardnum).AvailablePorts{subsysnum};
                 avlines = AdaptorInfo(boardnum).AvailableLines{subsysnum}{channelindx};
                 
                 nlines = length(avlines);
