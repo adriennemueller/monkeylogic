@@ -1,6 +1,6 @@
 %lp_dstrctr_3choice (timing script)
 % This task requires the animal to hold a lever down for a specific length
-% of time. A cued target and a distractor are presented simultaneously. If 
+% of time. A cued target and 2 distractors are presented simultaneously. If 
 % the target changes, the animal must release the lever within a certain
 % time window of the change to be rewarded. If the target does not change, 
 % the animal must keep the lever held to be rewarded.
@@ -65,7 +65,7 @@ if ~held,
     return
 end
 
-% Turn on Target and Distractor
+% Turn on Target and Distractors
 toggleobject([targ1 dist1 dist3], 'eventmarker', 121);
 
 % Tests lever remains pressed

@@ -1,5 +1,12 @@
 %lp_dstrctr_nocue_mobile_blank_fix (timing script)
 
+% Presents two opposing targets, one of which may flip. No cue is
+% presented. Subject must fixate on a central fixation spot with the lever
+% pressed down and then release the lever if one of the targets flips -
+% all the while, maintaining fixation. Targets will blank briefly in
+% between initial presentation and potential flip.
+
+
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;
 targ1 = 2;

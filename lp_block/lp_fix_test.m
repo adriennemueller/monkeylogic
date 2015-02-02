@@ -1,4 +1,8 @@
-%lp_dstrctr_nocue_mobile_blank_fix (timing script)
+%lp_fix_test (timing script)
+
+% Dummy Task to test how to simultaneously verify lever held and fixation
+% held.
+
 
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;
@@ -24,7 +28,7 @@ reward = 300;
 
 %%%%%%%%% TASK %%%%%%%%
 
-% Show Fixation Spot, Cues the Beginning of a Trial:
+% Show Fixation Spot, Cues the Beginning of a Trial, Acquire Fixation:
 toggleobject(start_spot, 'eventmarker', 120) % Fixation Spot Shown
 ontarget = eyejoytrack('acquirefix', start_spot, fix_radius, wait_for_fix);
 if ~ontarget,

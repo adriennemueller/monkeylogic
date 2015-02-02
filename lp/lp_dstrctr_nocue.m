@@ -1,5 +1,9 @@
 %lp_dstrctr_nocue (timing script)
 
+% Subject must hold lever down and report if either (or both) change
+% orientation by releasing the lever. If neither change position, the lever
+% should remain pressed.
+
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;
 targ1 = 2;

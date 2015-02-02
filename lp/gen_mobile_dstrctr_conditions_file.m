@@ -1,3 +1,4 @@
+% Generates a condition file for a lever-press distractor-choice task.
 function gen_mobile_dstrctr_conditions_file( numTrials, filename )
     path( path, '../' );
 

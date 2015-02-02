@@ -1,3 +1,5 @@
+% Generates a condition file for a cued lever-press distractor-choice task.
+
 function gen_mobile_dstrctr_cued_conditions_file( numTrials, filename )
     path( path, '../' );
 

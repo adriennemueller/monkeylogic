@@ -55,12 +55,7 @@ end
 
 ontarget = eyejoytrack('acquirefix', target, fix_radius, aquire_target_time);
 if ~ontarget,
-    trialerror(2); % no or late response (did not land on either the target or distractor)
-    toggleobject(target);
-    idle(200, [1, 0, 0]); % Red Error Screen
-    return
-elseif ontarget == 2,
-    trialerror(6); % chose the wrong (second) object among the options [target distractor]
+    trialerror(2); % no or late response (did not land on the target)
     toggleobject(target);
     idle(200, [1, 0, 0]); % Red Error Screen
     return

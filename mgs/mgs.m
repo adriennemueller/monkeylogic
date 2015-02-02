@@ -5,7 +5,7 @@
 % during a delay period; then make an eye movement to the remembered
 % location.
 
-editable( 'fix_radius', 'reward_value', 'initial_fix', 'cue_time', 'delay', 'saccade_time', 'hold_target_time', 'targ_radius', 'radius', 'spec_theta' );
+editable( 'fix_win', 'reward_value', 'initial_fix', 'cue_time', 'delay', 'saccade_time', 'hold_target_time', 'targ_win', 'radius', 'spec_theta' );
 
 % give names to the TaskObjects defined in the conditions file:
 fixation_point = 1;
@@ -21,11 +21,11 @@ max_reaction_time = 500;
 saccade_time = 80;
 hold_target_time = 200;
 
-% fixation window (in degrees):
-fix_radius = 1.3;
-targ_radius = 2;
+% fixation windows (in MLUs):
+fix_win = 1.3;
+targ_win = 2;
 
-spec_theta = 0;
+spec_theta = 0; %Not Ideal. What if want to have preferred direction == 0?
 
 reward_value = 300;
 
@@ -92,14 +92,14 @@ success = reposition_object(target, new_targ_xpos, new_targ_ypos);
 
 % initial fixation:
 toggleobject(fixation_point, 'eventmarker', 120);
-ontarget = eyejoytrack('acquirefix', fixation_point, fix_radius, wait_for_fix);
+ontarget = eyejoytrack('acquirefix', fixation_point, fix_win, wait_for_fix);
 if ~ontarget,
     trialerror(1); % no fixation
     toggleobject(fixation_point, 'eventmarker', 121)
     idle(200, [1, 0, 0]); % Red Error Screen
     return
 end
-ontarget = eyejoytrack('holdfix', fixation_point, fix_radius, initial_fix);
+ontarget = eyejoytrack('holdfix', fixation_point, fix_win, initial_fix);
 if ~ontarget,
     trialerror(2); % broke fixation
     toggleobject(fixation_point, 'eventmarker', 122)
@@ -110,7 +110,7 @@ end
 
 % cue epoch
 toggleobject(cue, 'eventmarker', 123); % turn on cue
-ontarget = eyejoytrack('holdfix', fixation_point, fix_radius, cue_time);
+ontarget = eyejoytrack('holdfix', fixation_point, fix_win, cue_time);
 if ~ontarget,
     trialerror(2); % broke fixation
     toggleobject([fixation_point cue], 'eventmarker', 124)
@@ -120,7 +120,7 @@ end
 toggleobject(cue, 'eventmarker', 125); % turn off sample
 
 % delay epoch
-ontarget = eyejoytrack('holdfix', fixation_point, fix_radius, delay);
+ontarget = eyejoytrack('holdfix', fixation_point, fix_win, delay);
 if ~ontarget,
     trialerror(2); % broke fixation
     toggleobject(fixation_point, 'eventmarker', 126)
@@ -130,7 +130,7 @@ end
 
 % choice presentation and response
 toggleobject(fixation_point, 'eventmarker', 127); % turns off fixation point
-[ontarget rt] = eyejoytrack('holdfix', fixation_point, fix_radius, max_reaction_time); % rt will be used to update the graph on the control screen
+[ontarget rt] = eyejoytrack('holdfix', fixation_point, fix_win, max_reaction_time); % rt will be used to update the graph on the control screen
 if ontarget, % max_reaction_time has elapsed and is still on fix spot
     trialerror(3); % no response
     %toggleobject(target, 'eventmarker', 128)
@@ -138,7 +138,7 @@ if ontarget, % max_reaction_time has elapsed and is still on fix spot
     return
 end
 
-ontarget = eyejoytrack('acquirefix', target, targ_radius, saccade_time);
+ontarget = eyejoytrack('acquirefix', target, targ_win, saccade_time);
 if ~ontarget,
     trialerror(4); % no or late response (did not land on the target)
     %toggleobject(target, 'eventmarker', 129)
@@ -148,7 +148,7 @@ if ~ontarget,
 end
 
 % hold target then reward
-ontarget = eyejoytrack('holdfix', target, targ_radius, hold_target_time);
+ontarget = eyejoytrack('holdfix', target, targ_win, hold_target_time);
 if ~ontarget,
     trialerror(2); % broke fixation
     %toggleobject(target, 'eventmarker', 130)
@@ -157,6 +157,6 @@ if ~ontarget,
 end
 
 trialerror(0); % correct
-%toggleobject(target, 'eventmarker', 131); %turn off remaining objects
+%toggleobject(target, 'eventmarker', 131); %turn off remaining object
 goodmonkey(reward_value); % juice
 

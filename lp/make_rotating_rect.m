@@ -1,3 +1,5 @@
+% Suite of functions to make images files for rotating rectangular targets.
+
 function movie = make_rotating_rect( Rwidth, Rheight )
     rect = rgb(make_rect( Rwidth, Rheight ));
     movie = make_rotating_movie( rect, 71 );

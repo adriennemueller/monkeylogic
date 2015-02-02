@@ -1,6 +1,6 @@
-% sacc_task_no_fix
+% sacc_task_mobile_fix
 
-% This task rewards animals for making eye movements to displayed targets.
+% This task rewards animals for making eye movements to displayed targets, and holding them.
 
 editable( 'fix_radius', 'reward_val', 'wait_for_fix', 'hold_fix_time' );
 
@@ -10,11 +10,11 @@ fixation_point = 1;
 
 % define time intervals (in ms):
 wait_for_fix = 1000;
-hold_fix_time = 100;
+hold_fix_time = 600;
 
 % fixation window (in degrees):
 fix_radius = 2;
-reward_val = 300;
+reward_val = 100;
 
 
 % TASK:
