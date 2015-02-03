@@ -65,7 +65,6 @@ theta = theta * pi/180;
 
 bhv_variable( 'theta', theta );
 
-
 radius = 3; %randi(5); %Get Randum Radius between 1 and 5
 [new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to polar coordinates
 bhv_variable( 'radius', radius );
