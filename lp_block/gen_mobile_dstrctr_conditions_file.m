@@ -1,3 +1,11 @@
+% Generates a condition file for a lever-press distractor-choice task.
+% Conditions will be allocated to different blocks, based on difficulty.
+% The b_span variable determines how many degrees of visual angle should
+% fall within a single block. b_overlap determines how many degrees of
+% visual angle should overlap between blocks. The angles in question are
+% with regard to the orientaion change of the target and the distractor.
+
+
 function gen_mobile_dstrctr_conditions_file( filename, b_span, b_overlap, nTrials )
     path( path, '../' );
 
@@ -13,51 +21,33 @@ function gen_mobile_dstrctr_conditions_file( filename, b_span, b_overlap, nTrial
 		tar1_end   = randi(36)*5;
 		tar2       = randi(36)*5;
 		
+        % skip over randomly generated conditions in which there would be
+        % no change
 		if tar1_start == tar1_end
 			continue
         end
+        
+        % Make one condition with the changed 't1' orientation.
 		cond = cond + 1;
 		blocks = get_blocks( b_span, b_overlap, tar1_start, tar1_end );
 		s.t_info = 'T1 Change';
 		make_condition(tar1_start, tar1_end, tar2, tar2, cond, blocks, 1, s, fid);
 		
+        % Make the next condition identical except that t1 doesn't change.
 		cond = cond + 1;
 		%blocks = get_blocks( b_span, b_overlap, tar1_start, tar1_start );
 		s.t_info = 'Same';
 		make_condition(tar1_start, tar1_start, tar2, tar2, cond, blocks, 1, s, fid);
 	
     end
-    % step = 5;
-    % N = 175;
-    
-    % for tar1_start = 0:step:N
-        % for tar1_end = 0:step:N
-            % if tar1_start == tar1_end
-                % continue
-            % end
-            
-            % for tar2_start = 0:step:N
-				
-				% cond = cond + 1;
-				% block = get_blocks( b_span, b_overlap, tar1_start, tar1_start );
-				% s.t_info = 'Same';
-				% make_condition(tar1_start, tar1_start, tar2_start, tar2_start, cond, 1, 2, s, fid);
-				
-				% cond = cond + 1;
-				% blocks = get_blocks( b_span, b_overlap, tar1_start, tar1_end );
-				% s.t_info = 'T1 Change';
-				% make_condition(tar1_start, tar1_end, tar2_start, tar2_start, cond, blocks, 1, s, fid);
-                
-                
-            
-            % end
-        % end
-    % end
+
 
     fclose(fid);
 
 end
 
+% This function determines what block a given condition should fall into,
+% based on the orientation change.
 function blocks = get_blocks( span, overlap, t_s, t_e )
 
 %  |-- span --|

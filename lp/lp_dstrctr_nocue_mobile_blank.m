@@ -1,5 +1,11 @@
 %lp_dstrctr_nocue_mobile_blank (timing script)
 
+% Presents two opposing targets, one of which may flip. No cue is
+% presented. Subject must hold the lever
+% pressed down and then release the lever if one of the targets flips. The
+% targets will blank briefly in between presentation and possible-flipping.
+
+
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;
 targ1 = 2;

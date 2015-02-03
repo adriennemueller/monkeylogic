@@ -1,4 +1,7 @@
-%lp_dstrctr_nocue_mobile_mTilt (timing script)
+%rotate_test (timing script)
+
+% Movie-based rotation of targets. Should rotate two targets simultaneously
+% by 90 degrees, but memory too poor to handle it. Can only rotate one.
 
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;

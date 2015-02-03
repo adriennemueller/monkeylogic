@@ -3,7 +3,9 @@
 % of time. A cued target and a distractor are presented simultaneously. If 
 % the target changes, the animal must release the lever within a certain
 % time window of the change to be rewarded. If the target does not change, 
-% the animal must keep the lever held to be rewarded.
+% the animal must keep the lever held to be rewarded. In this task, the
+% targets are repositioned to new locations, still oposing each other,
+% around the central 'fixation spot'.
 
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;

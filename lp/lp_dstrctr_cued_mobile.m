@@ -1,5 +1,13 @@
 %lp_dstrctr_cued_mobile (timing script)
 
+% Presents two opposing targets, one of which may flip. A cue is presented, 
+% informing which is more likely to change. Subject must hold the lever
+% pressed down and then release the lever if one of the targets flips. The
+% targets will blank briefly in between presentation and possible-flipping.
+% The targets are positioned, opposing each other, randomly around a
+% central 'fixation spot'.
+
+
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;
 targ1 = 2;

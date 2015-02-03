@@ -1,3 +1,12 @@
+% Generates a condition file for a cued lever-press distractor-choice task.
+% Conditions will be allocated to different blocks, based on difficulty.
+% The b_span variable determines how many degrees of visual angle should
+% fall within a single block. b_overlap determines how many degrees of
+% visual angle should overlap between blocks. The angles in question are
+% with regard to the orientaion change of the target and the distractor.
+
+% In this task the target positions are also randomly generated.
+
 function gen_mobile_dstrctr_conditions_file_cued( filename, b_span, b_overlap, nTrials )
     path( path, '../' );
 
@@ -34,37 +43,14 @@ function gen_mobile_dstrctr_conditions_file_cued( filename, b_span, b_overlap, n
 		make_condition(tar1_start, tar1_start, tar2, tar2, t1x, t1y, t2x, t2y, cue_angle, cond, blocks, 1, s, fid);
 	
     end
-    % step = 5;
-    % N = 175;
-    
-    % for tar1_start = 0:step:N
-        % for tar1_end = 0:step:N
-            % if tar1_start == tar1_end
-                % continue
-            % end
-            
-            % for tar2_start = 0:step:N
-				
-				% cond = cond + 1;
-				% block = get_blocks( b_span, b_overlap, tar1_start, tar1_start );
-				% s.t_info = 'Same';
-				% make_condition(tar1_start, tar1_start, tar2_start, tar2_start, cond, 1, 2, s, fid);
-				
-				% cond = cond + 1;
-				% blocks = get_blocks( b_span, b_overlap, tar1_start, tar1_end );
-				% s.t_info = 'T1 Change';
-				% make_condition(tar1_start, tar1_end, tar2_start, tar2_start, cond, blocks, 1, s, fid);
-                
-                
-            
-            % end
-        % end
-    % end
+
 
     fclose(fid);
 
 end
 
+% This function determines what block a given condition should fall into,
+% based on the orientation change.
 function blocks = get_blocks( span, overlap, t_s, t_e )
 
 %  |-- span --|

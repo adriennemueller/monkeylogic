@@ -1,6 +1,10 @@
 % target_test
 
 % This is not a task, but a tool for measuring the positioning of targets.
+% As long as the fixation point is held, the fixation point and a target
+% will be displayed concurrently - at a fixed distance apart. The
+% configutation file should have the targets rotate through the four
+% cardinal directions.
 
 editable( 'fix_radius', 'hold_fix_time' );
 

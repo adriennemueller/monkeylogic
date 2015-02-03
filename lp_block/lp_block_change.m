@@ -1,3 +1,7 @@
+% lp_block_change is a function that ML uses to determine at what point to
+% switch between blocks: either to an easier one, or a harder one - based
+% on the 'correctly answered fraction' threshold.
+
 function NewBlock = lp_block_change(TrialRecord)
 
 NewBlock = 0; % default = continue current block

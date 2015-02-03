@@ -1,4 +1,11 @@
-%lp_dstrctr_nocue_mobile (timing script)
+% lp_dstrctr_nocue_mobile (timing script)
+
+% Subject must hold lever pressed while two targets are displayed. If
+% either of the targets changes orientation, the subject should release the
+% lever. If neither flips, the target should keep the lever pressed. This
+% task positions the targets, opposite each other, at random positions
+% around a central fixation spot. 'Span' determines what range away from
+% the horizontal the targets can be displayed (in degrees).
 
 % Naming for TaskObjects defined in the conditions file:
 start_spot = 1;

@@ -1,3 +1,5 @@
+% Suite of functions to make image files for a cue 'stick'.
+
 function movie = make_rotating_stick( Rwidth, Rheight )
     rect = rgb(make_rect( Rwidth, Rheight ));
     movie = make_rotating_movie( rect, 7 ); % Use 359 for 1deg steps

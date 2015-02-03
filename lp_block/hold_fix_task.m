@@ -1,7 +1,7 @@
-% sacc_task
+% hold_fix_task
 
-% This task rewards animals for making eye movements to displayed targets
-% after holding their gaze steady at fixation.
+% This task rewards animals for maintaining fixation while a distractor
+% (target) is flashed on the screen.
 
 editable( 'fix_radius', 'reward_val', 'pre_flash_dur', 'flash_dur', 'post_flash_dur' );
 
