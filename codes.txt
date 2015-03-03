@@ -115,4 +115,8 @@ Code	Description
 114 	Key press <Left>
 115	Key press <enter>
 116 	Key press (other)
+117	undefined
+118	undefined
+119	undefined
+120	initial fixation point on
 	
