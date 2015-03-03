@@ -157,7 +157,7 @@ end
 
 return
 
-%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [tflip, framenumber] = toggleobject(stimuli, varargin)
 persistent TrialObject ScreenData DAQ togglecount ObjectStatusRecord yrasterthresh ltb lastframe activemovies % %taken from TaskObject & ScreenInfo
 
@@ -433,7 +433,7 @@ for i = stimuli_fortoggle,
             play(ob.PlayerObject);
             TrialObject(i).Status = 0;
         elseif ob.Modality == 4 && ~movie_advance_only, % analog stimulation
-            trigger(DAQ.AnalogOutput);
+            start(DAQ.AnalogOutput);
             TrialObject(i).Status = 0;
         elseif ob.Modality == 5 && ~movie_advance_only, % TTL (digital) output
             putvalue(DAQ.(ob.Class), 1);
@@ -539,7 +539,7 @@ if ~fastdraw,
     end
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function eventmarker_long(codenumber, varargin)
 persistent bitspercode
 
@@ -569,7 +569,7 @@ for i = 1:length(codelist),
     eventmarker(codelist(i));
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function Codes = eventmarker(codenumber, varargin)
 persistent numcodes CodeNumbers CodeTimes DaqDIO digoutflag z databits strobebit sbval numdatabits
 
@@ -622,7 +622,7 @@ for i = 1:length(codenumber),
     CodeTimes(numcodes) = tstamp;
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ontarget, rt] = eyejoytrack(fxn1, varargin)
 global SIMULATION_MODE
 global RFM_TASK
@@ -1390,7 +1390,7 @@ else
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [jx, jy] = joystick_position(varargin)
 persistent DAQ AI ScreenData joyx joyy jTform cxpos_last cypos_last last_jtrace_update ControlObject
 
@@ -1451,7 +1451,7 @@ if (t1 - last_jtrace_update) > ScreenData.UpdateInterval,
     last_jtrace_update = trialtime;
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ex, ey] = eye_position(varargin)
 persistent DAQ AI ScreenData eyex eyey eTform exOff eyOff exTarget eyTarget last_etrace_update ControlObject
 
@@ -1523,7 +1523,7 @@ if (t1 - last_etrace_update) > ScreenData.UpdateInterval,
     last_etrace_update = trialtime;
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [adata, frq] = get_analog_data(sig, varargin)
 persistent DAQ eTform jTform aipresent
 
@@ -1613,7 +1613,7 @@ if action == 2,
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function idle(duration, varargin)
 persistent ScreenData
 
@@ -1643,7 +1643,7 @@ if colorflag == 1,
     mlvideo('flip', ScreenData.Device);
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [scancode, rt] = getkeypress(maxtime, varargin)
 persistent ScreenData
 
@@ -1675,7 +1675,7 @@ elseif ScreenData.Priority == 3,
     prtrealtime;
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function varargout = goodmonkey(duration, varargin)
 persistent DAQ rewardtype reward_on reward_off noreward rewardsgiven rewardstart rewardend reward_dur rewardpolarity rewardindex pausetime triggerval
 
@@ -1804,7 +1804,7 @@ for i = 1:numreward,
     end
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function success = set_frame_order(stimnum, frameorder, varargin)
 persistent TrialObject
 
@@ -1847,7 +1847,7 @@ eyejoytrack(-3, stimnum, TO);
 TrialObject(stimnum) = TO;
 success = 1;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function translate_success = set_object_path(stimnum, xpath, ypath)
 persistent ScreenData TrialObject
 
@@ -1909,7 +1909,7 @@ else
     translate_success = 1;
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function repos_success = reposition_object(stimnum, xnew, ynew)
 persistent ScreenData TrialObject
 
@@ -1960,7 +1960,7 @@ else
     repos_success = 0;
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [t, f] = trialtime(varargin)
 persistent k abs_tstart frame_length frame_offset ticID
 
@@ -1987,7 +1987,7 @@ end
 t = k*toc(ticID);
 f = floor((t-frame_offset)/frame_length);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function iti = set_iti(t)
 persistent time
 
@@ -2001,7 +2001,7 @@ else
     iti = -1;
 end
         
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function showcursor(cflag, varargin)
 persistent ScreenData
 
@@ -2021,7 +2021,7 @@ for i = 1:ScreenData.BufferPages-1,
 end
 eyejoytrack(-2, cflag);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function hotkey(keyval, varargin)
 persistent scanletters scancodes keynumbers keycallbacks
 
@@ -2091,7 +2091,7 @@ keynumbers(n) = keynum;
 keycallbacks{n} = keyfxn;
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function val = bhv_variable(varname, varargin)
 persistent vars
 
@@ -2143,7 +2143,7 @@ end
 
 val = 0;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function trialerror(e) %#ok<DEFNU>
 
 if ischar(e),
@@ -2162,7 +2162,7 @@ elseif ~isnumeric(e) && ~ischar(e),
 end
 end_trial(-2, e);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function user_text(text, varargin)
 persistent ScreenInfo
 
@@ -2178,7 +2178,7 @@ end
 text = sprintf(text,varargin{:});
 initcontrolscreen(6, ScreenInfo, text);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function user_warning(text, varargin)
 persistent ScreenInfo on
 
@@ -2214,21 +2214,22 @@ end
 text = sprintf(text,varargin{:});
 initcontrolscreen(7, ScreenInfo, text);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function abort_trial
 error('ML:TrialAborted','Trial aborted.');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function escape_screen %#ok<DEFNU>
 end_trial(-3);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function data_missed(obj, event) %#ok<INUSD,DEFNU>
 user_warning('Analog input data missed event!');
 abort_trial;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function TrialData = end_trial(varargin)
+
 global SIMULATION_MODE
 persistent DAQ ScreenData eTform jTform trialtype trialerror escape
 
@@ -2366,3 +2367,5 @@ TrialData.RewardRecord = goodmonkey(-3);
 TrialData.TrialError = trialerror;
 TrialData.CycleRate = cyclerate;
 TrialData.TrialExitTime = round(trialtime - t1);
+
+%%

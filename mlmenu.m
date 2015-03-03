@@ -27,9 +27,9 @@ if ~ispref('MonkeyLogic', 'Directories'),
 end
 MLPrefs.Directories = getpref('MonkeyLogic', 'Directories');
 
-validxsize =  [ 320   320    640   768    800    1024   1024  1152  1152   1280     1280   1280   1366   1400    1440   1600   1680     1920     1920   2048  2048  2560       2560    2560    2560    3840    4096];
-validysize =  [ 200   240    480   576    600    600    768   768   864    720      960    1024   768    1050    900    1200   1050     1080     1200   1080  1536  1440       1600    1920    2048    2160    3072];
-validlabels = {'CGA' 'QVGA' 'VGA' 'PAL'  'SVGA' 'WSVGA' 'XGA' '3:2' '4:3'  'HD720'  '4:3'  '5:4'  'HDTV' 'SXGA+' '8:5'  'UGA' 'WSXGA+' 'HD1080' 'WUXGA' '2K'  'QXGA' 'HD1440' 'WQXGA'  '5MEG' 'QSXGA' 'UHDTV'  '4K'};
+validxsize =  [ 320   320    640   768    800    1024   1024  1152  1152   1280     1280   1280   1366   1400    1440   1600         1600   1680     1920     1920   2048  2048  2560       2560    2560    2560    3840    4096];
+validysize =  [ 200   240    480   576    600    600    768   768   864    720      960    1024   768    1050    900    900          1200   1050     1080     1200   1080  1536  1440       1600    1920    2048    2160    3072];
+validlabels = {'CGA' 'QVGA' 'VGA' 'PAL'  'SVGA' 'WSVGA' 'XGA' '3:2' '4:3'  'HD720'  '4:3'  '5:4'  'HDTV' 'SXGA+' '8:5'  '900p(HD+)'  'UGA' 'WSXGA+' 'HD1080' 'WUXGA' '2K'  'QXGA' 'HD1440' 'WQXGA'  '5MEG' 'QSXGA' 'UHDTV'  '4K'};
 validrefresh = [60 72 75 85 100 120 240];
 
 numvalidsizes = length(validxsize);
@@ -2909,41 +2909,17 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                     mlmessage('*** TTLs and Digital Codes must be assigned to a digital output ***');
                     return
                 end
-                
-                avports = AdaptorInfo(boardnum).AvailablePorts{subsysnum};
                 avlines = AdaptorInfo(boardnum).AvailableLines{subsysnum}{channelindx};
-                
-                nlines = length(avlines);
                 if strcmp('CodesDigOut', iovar),
-                    % first select ports (allows user to select multiple
-                    % ports)
-                    choose_dio_port(avports, 1);
-                    portindx = get(findobj('tag', 'availablechannels'), 'userdata');
-                    if isempty(portindx)
-                        return
-                    end
-                    InputOutput.(iovar).Channel = avports(portindx);
-                    linestoadd = [];
-                    for portindx = portindx(1) : portindx(end)
-                        thisport = avports(portindx);
-                        indx = get(findobj('tag', 'availablechannels'), 'userdata');
-                        if isempty(indx)
-                            return
-                        end
-                        % e.g. nports = 3, nlines = 8: Port0->Lines 0-7,
-                        % Port1->Lines 8-15, Port2->Lines 16-23
-                        linestoadd = [linestoadd avlines(indx) + nlines * thisport]; %#ok<AGROW>
-                    end
-                    InputOutput.(iovar).Line = linestoadd;
+                    choose_dio_line(avlines, 1);
                 else
                     choose_dio_line(avlines);
+                end
                 indx = get(findobj('tag', 'availablechannels'), 'userdata');
                 if isempty(indx),
                     return
                 end
-                InputOutput.(iovar).Line = avlines(indx);
-                end
-                
+                InputOutput.(iovar).Line = avlines(indx);               
             elseif strcmp('Reward', iovar) && strcmpi(AdaptorInfo(boardnum).SubSystemsNames(subsysnum), 'digitalio'),
                 avlines = AdaptorInfo(boardnum).AvailableLines{subsysnum}{channelindx};
                 choose_dio_line(avlines);
@@ -3109,7 +3085,7 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                 sbval = get(findobj(gcf, 'tag', 'strobebitedge'), 'value') - 1;
                 DaqDIO = DAQ.BehavioralCodes.DIO;
                 databits = DAQ.BehavioralCodes.DataBits.Index;
-                databits = cat(2, databits{:});
+                databits = cat(2, databits(:));
                 numlines = length(databits);
                 strobebit = DAQ.BehavioralCodes.StrobeBit.Index;
                 z = zeros(1, numlines+1);
@@ -3119,13 +3095,19 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
                 mlmessage(sprintf('>>> Sending 10 cycles of 2.^(0:%i) <<<', numlines-1));
                 drawnow;
                 for i = 1:10,
-                    for k = 0:numlines-1,
-                        % Output codenumber on digital port (assume 8-bit)
-                        codenumber = 2^k;
-                        bvec([databits strobebit]) = [dec2binvec(codenumber, numlines) ~sbval];
+                    for k = -1:numlines-1,
+                        if k == -1,
+                            codenumber = 0;
+                        else
+                            % Output codenumber on digital port (assume 8-bit)
+                            codenumber = 2^k;
+                        end
+                        bvec([databits{:} strobebit]) = [dec2binvec(codenumber, numlines) ~sbval];
                         putvalue(DaqDIO, bvec);
+                        disp(bvec)
                         bvec(strobebit) = sbval; %#ok<AGROW>
                         putvalue(DaqDIO, bvec);
+                        disp(bvec)
                         pause(0.01);
                     end
                     pause(0.1);
@@ -3237,12 +3219,7 @@ uicontrol('style', 'pushbutton', 'position', [92 35 70 30], 'string', 'Cancel', 
 set(gcf, 'closerequestfcn', 'set(findobj(''tag'', ''availablechannels''), ''userdata'', []); delete(gcf)');
 if ~isempty(varargin) && varargin{1},
     set(h, 'max', 2); %enable multi-select
-    if varargin{2}
-        portnum = varargin{2};
-        set(f, 'name', ['Select Lines for Port ', num2str(portnum)]);
-    else
     set(f, 'name', 'Select Lines');
-end
 end
 waitfor(gcf);
 

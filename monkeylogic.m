@@ -13,7 +13,7 @@ global MLHELPER_OFF
 % Modified 8/07/08 -WA (remote commands added)
 % Modified 2/04/13 -DF (editable variables bug fix)
 % Modified 10/7/13 -DF (actual refresh rate measurement loop added)
-
+ %Modified 7/25/14 -Tina and David (added actual refresh rate to TrialRecord)
 % Syntax:
 %        monkeylogic(ConditionsFile, DataFile, TestFlag)
 %       
@@ -520,6 +520,7 @@ TrialRecord.LastTrialCodes.CodeNumbers = [];
 TrialRecord.LastTrialCodes.CodeTimes = [];
 TrialRecord.DataFile = datafile;
 TrialRecord.SimulationMode = 0;
+TrialRecord.ActualRefreshRate = framerate; %for pattern tracing task David and Tina
 
 AllCodes.CodeNumbers = [];
 
@@ -1685,8 +1686,7 @@ for obnum = 1:lc, %first check for user-generated images
             nout = nargout(fname);
 			if nout < 3 && needxy,
                 error('*** "Gen" function %s should return two additional output arguments to specify X & Y position', fname);
-			end
-            
+            end
 			if nout == 1,
                 imdata = feval(fname, TrialRecord);
             elseif nout == 2,
@@ -1695,8 +1695,8 @@ for obnum = 1:lc, %first check for user-generated images
                 [imdata xpos ypos] = feval(fname, TrialRecord);
             else
                 [imdata xpos ypos MoreInfo] = feval(fname, TrialRecord);
-			end
-
+            end
+            
             if needxy,
                 if isstruct(xpos) || iscell(xpos) || isstruct(ypos) || iscell(ypos) || ischar(xpos) || ischar(ypos) || numel(xpos) > 1 || numel(ypos) > 1,
                     error('*** Xpos and Ypos values returned by "Gen" function %s should be simple scalar variables', fname);
@@ -1951,6 +1951,14 @@ for obnum = 1:lc, %first check for user-generated images
             save(['create_taskobjects_' errorfile]);
             error('*** Stimulus waveform must be a one-dimensional vector ***');
         end
+       
+        while strcmp(DaqInfo.AnalogOutput.Sending, 'On'); end %cannot delete channels if still outputing from prior trial
+        delete(DaqInfo.AnalogOutput.Channel); %in order to flush pending AO data from previous trial, if unused.
+        for chadd = 1:length(DaqInfo.AnalogOutputChannel),
+            ch = addchannel(DaqInfo.AnalogOutput, DaqInfo.AnalogOutputChannel{chadd}, DaqInfo.AnalogOutputName{chadd});
+            DaqInfo.(DaqInfo.AnalogOutputName{chadd}).ChannelIndex = ch.Index;
+        end
+        
         aochannels = cat(1, DaqInfo.AnalogOutput.Channel.Index);
         numaochannels = length(aochannels);
         stimchanindex = eval(sprintf('DaqInfo.Stim%i.ChannelIndex', TaskObject(obnum).OutputPort));
@@ -1960,13 +1968,8 @@ for obnum = 1:lc, %first check for user-generated images
         else
             stimdata(:, stimchanindex) = TaskObject(obnum).WaveForm;
         end
-        stop(DaqInfo.AnalogOutput); %in case was still running from a previous trial
         putdata(DaqInfo.AnalogOutput, stimdata);
-        if ~isempty(DaqInfo.AnalogOutput),
-            start(DaqInfo.AnalogOutput);
-            %isrunning?
-        end
-
+        
     elseif strcmpi(t, 'ttl'), %TTL pulse
 
         TaskObject(obnum).Modality = 5; %digital
@@ -2111,7 +2114,7 @@ copyfile(file, mldirectories.RunTimeDirectory);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function error_escape(ScreenInfo, DaqInfo, fidbhv)
-
+%return
 prtnormal;
 mlkbd('release');
 mlvideo('showcursor', ScreenInfo.Device, 1);

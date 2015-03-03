@@ -8,7 +8,7 @@ function [DAQ, DaqError] = initio(IO)
 % Last modified 8/11/08 -WA (to make certain analog-input objects use DMA)
 
 %for manual editing:
-configIO.AI.BufferingConfig =  [16 1024]; %[1 2000];
+configIO.AI.BufferingConfig =  [16 2000]; %[16 1024]; %[1 2000];
 configIO.AI.InputRange = [-5 5];
 configIO.Reward.TriggerValue = 5; %if analog, number of volts to trigger or hold at (will be "1" if digital).
 
@@ -149,6 +149,7 @@ for i = 1:numadaptors,
 end
 
 %Create DAQ objects within DAQ structure
+aochannelcount = 0;
 for i = 1:length(fnames),
     signame = fnames{i};
     sigpresent = isfield(IO.(signame), 'Adaptor');
@@ -323,13 +324,14 @@ for i = 1:length(fnames),
             end
             
         elseif strfind(signame, 'Stim'),
-            
+                        
+            aochannelcount = aochannelcount + 1;
             if isempty(DAQ.AnalogOutput),
                 DAQ.AnalogOutput = eval(IO.(signame).Constructor);
             end
-            ch = addchannel(DAQ.AnalogOutput, IO.(signame).Channel, signame);
-            DAQ.(signame).ChannelIndex = ch.Index;
-            
+            DAQ.AnalogOutputChannel{aochannelcount} = IO.(signame).Channel;
+            DAQ.AnalogOutputName{aochannelcount} = signame;
+                            
         elseif strfind(signame, 'TTL'),
 
             if ~isfield(IO.(signame), 'Line'),
@@ -363,7 +365,7 @@ for i = 1:length(fnames),
 end
 
 if ~isempty(DAQ.AnalogOutput),
-    set(DAQ.AnalogOutput, 'TriggerType', 'Manual');
+    set(DAQ.AnalogOutput, 'TriggerType', 'Immediate');
 end
 
 rmf = {'EyeX' 'EyeY' 'JoyX' 'JoyY' 'CodesDigOut' 'DigCodesStrobeBit'};
