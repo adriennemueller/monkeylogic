@@ -43,8 +43,8 @@ if ~ontarget,
 end
 
 
-% choice presentation and response
-toggleobject([fixation_point target]); % simultaneously turns of fix point and displays target
+% response
+toggleobject([fixation_point target]); % simultaneously turns off fix point and displays target
 [ontarget rt] = eyejoytrack('holdfix', fixation_point, fix_radius, max_reaction_time); % rt will be used to update the graph on the control screen
 if ontarget, % max_reaction_time has elapsed and is still on fix spot
     trialerror(1); % no response
