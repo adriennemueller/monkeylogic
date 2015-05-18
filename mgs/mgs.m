@@ -34,7 +34,7 @@ reward_value = 300;
 % 1   No initial fixation.
 % 2   Broke fixation.
 % 3   Did not react.
-% 4  Reacted but did not capture target.
+% 4   Reacted but did not capture target.
 
 
 
@@ -127,7 +127,7 @@ if ~ontarget,
     return
 end
 
-% choice presentation and response
+% response
 toggleobject(fixation_point, 'eventmarker', 127); % turns off fixation point
 [ontarget rt] = eyejoytrack('holdfix', fixation_point, fix_win, max_reaction_time); % rt will be used to update the graph on the control screen
 if ontarget, % max_reaction_time has elapsed and is still on fix spot
