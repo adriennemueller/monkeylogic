@@ -5,7 +5,7 @@
 % during a delay period; then make an eye movement to the remembered
 % location.
 
-editable( 'fix_win', 'reward_value', 'initial_fix', 'cue_time', 'delay', 'saccade_time', 'hold_target_time', 'targ_win', 'radius', 'spec_theta', 'targX', 'targY' );
+editable( 'fix_win', 'reward_value', 'initial_fix', 'cue_time', 'delay', 'saccade_time', 'hold_target_time', 'targ_win', 'targX', 'targY' );
 
 % give names to the TaskObjects defined in the conditions file:
 fixation_point = 1;
@@ -29,10 +29,6 @@ targ_win = 2;
 targX = 0; % Would be fixation, but using as Null.
 targY = 0; % Would be fixation, but using as Null.
 
-
-spec_theta = 0; %Not Ideal. What if want to have preferred direction == 0?
-
-
 reward_value = 300;
 
 %%% Trial Errors %%%
@@ -45,52 +41,41 @@ reward_value = 300;
 
 
 %Reposition Objects to New Locations
-span = 360; 
-shift = span/2;
-Preferred = randi([0, 1], 1, 1); % Decide whether it will be a preferred or non-preferred direction trial.
+bhv_variable( 'targX', targX );
+bhv_variable( 'targY', targY );
 
-if spec_theta
-	if Preferred
-		theta = spec_theta;
-	elseif ~Preferred
-		if spec_theta < 180
-			theta = spec_theta + 180;
-		elseif spec_theta > 180
-			theta = spec_theta - 180;
-		end
+if (targX ~= 0) | (targY ~= 0)
+	Preferred = randi([0, 1], 1, 1); % Decide whether it will be a preferred or non-preferred direction trial.
+	if (Preferred == 1)
+		newtargX = targX;
+		newtargY = targY;
+	elseif (Preferred == 0)
+		newtargX = targX * -1;
+		newtargY = targY * -1;
 	end
-	disp( ['Spec_theta: ' num2str(spec_theta)] );
+	
+	success = reposition_object(cue, newtargX, newtargY);
+	success = reposition_object(target, newtargX, newtargY);
+
 else
-	theta = randi(span)-shift; %Get Random Angle
+	newtargX = targX;
+	newtargY = targY;
 end
 
-if theta < 0
-	theta = 360 + theta;
-end
-theta = theta * pi/180;
-
-bhv_variable( 'theta', theta );
-
-radius = 3; %randi(5); %Get Randum Radius between 1 and 5
-[new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to polar coordinates
-bhv_variable( 'radius', radius );
-
-if isfield(TrialRecord, 'theta')
-    thetas = TrialRecord.theta;
-    thetas = [thetas theta];
+if isfield(TrialRecord, 'targX')
+    targXs = TrialRecord.targX;
+    targXs = [targXs newtargX];
 else
-    TrialRecord.theta = [];
+    TrialRecord.targX = [];
 end
 
-if isfield(TrialRecord, 'radius')
-    radii = TrialRecord.radius;
-    radii = [radii radius];
+if isfield(TrialRecord, 'targY')
+    targYs = TrialRecord.targY;
+    targYs = [targYs newtargY];
 else
-    TrialRecord.radius = [];
+    TrialRecord.targY = [];
 end
 
-%success = reposition_object(cue, new_targ_xpos, new_targ_ypos);
-%success = reposition_object(target, new_targ_xpos, new_targ_ypos);
 
 
 % TASK:
