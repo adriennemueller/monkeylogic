@@ -41,8 +41,7 @@ reward_value = 300;
 
 
 %Reposition Objects to New Locations
-bhv_variable( 'targX', targX );
-bhv_variable( 'targY', targY );
+
 
 if (targX ~= 0) | (targY ~= 0)
 	Preferred = randi([0, 1], 1, 1); % Decide whether it will be a preferred or non-preferred direction trial.
@@ -62,16 +61,21 @@ else
 	newtargY = targY;
 end
 
+% Save new target info th .bhv file.
+bhv_variable( 'targX', newtargX );
+bhv_variable( 'targY', newtargY );
+
+% This section may be unnecessary?
 if isfield(TrialRecord, 'targX')
     targXs = TrialRecord.targX;
-    targXs = [targXs newtargX];
+    targXs = [targXs newtargX]
 else
     TrialRecord.targX = [];
 end
 
 if isfield(TrialRecord, 'targY')
     targYs = TrialRecord.targY;
-    targYs = [targYs newtargY];
+    targYs = [targYs newtargY]
 else
     TrialRecord.targY = [];
 end
