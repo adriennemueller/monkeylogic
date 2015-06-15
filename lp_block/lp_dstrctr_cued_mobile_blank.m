@@ -1,6 +1,6 @@
 %lp_dstrctr_cued_mobile_blank (timing script)
 
-% Presents two opposing targets, one of which may flip. No cue is
+% Presents two opposing targets, one of which may flip. A cue is
 % presented. Subject must hold a lever
 % pressed down and then release the lever if one of the targets flips.
 % Targets will blank briefly in
