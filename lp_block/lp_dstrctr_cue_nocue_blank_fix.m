@@ -14,6 +14,7 @@ targ1new = 3;
 targ2 = 4;
 targ2new = 5;
 cue = 6;
+neutcue = 7;
 
 editable( 'reward', 'fix_radius', 'wait_release', 'hold_time', 'pre_hold_time', 'blank_time', 'spec_theta' );
 
@@ -58,6 +59,9 @@ nocue_prob = [0.95 0.05];
 rand_nocueidx = sum( rand >= cumsum([0,nocue_prob]) ); 
 rand_nocue = nocue( rand_nocueidx );
 bhv_variable( 'nocue', rand_nocue );
+if rand_nocue
+    cue = neutcue;
+end
 
 
 
@@ -176,39 +180,24 @@ if (~held) || (~fixated)
     return
 end
 
-if ~(rand_nocue)
-    % Turn on Cue
-    toggleobject(cue,'eventmarker', 131); % Cue on
+% Turn on Cue
+toggleobject(cue,'eventmarker', 131); % Cue on
 
-    % Tests lever remains pressed while fixating
-    state = eyejoytrack('holdtouch', 1, [], 'holdfix', start_spot, fix_radius, cue_time);
-    held = state(1); fixated = state(2);
-    if (~held) || (~fixated)
-        toggleobject([start_spot cue targ1 targ2], 'eventmarker', 125); %Turn off fixation spot and targets
-        trialerror(3); % Released too soon or broke fix
-        idle(200, [1, 0, 0]); % Red Error Screen
-        return
-    end
-else
-	state = eyejoytrack('holdtouch', 1, [], 'holdfix', start_spot, fix_radius, cue_time);
-    held = state(1); fixated = state(2);
-    if (~held) || (~fixated)
-        toggleobject([start_spot targ1 targ2], 'eventmarker', 125); %Turn off fixation spot and targets
-        trialerror(3); % Released too soon or broke fix
-        idle(200, [1, 0, 0]); % Red Error Screen
-        return
-    end
-	
+% Tests lever remains pressed while fixating
+state = eyejoytrack('holdtouch', 1, [], 'holdfix', start_spot, fix_radius, cue_time);
+held = state(1); fixated = state(2);
+if (~held) || (~fixated)
+    toggleobject([start_spot cue targ1 targ2], 'eventmarker', 125); %Turn off fixation spot and targets
+    trialerror(3); % Released too soon or broke fix
+    idle(200, [1, 0, 0]); % Red Error Screen
+    return
 end
 
 toggleobject([targ1 targ2], 'eventmarker',126);
 state = eyejoytrack('holdtouch', 1, [], 'holdfix', start_spot, fix_radius, blank_time);
 held = state(1); fixated = state(2);
 if (~held) || (~fixated)
-    toggleobject([start_spot], 'eventmarker', 127); % Turn off fix spot
-    if ~(rand_nocue)
-        toggleobject(cue);
-    end
+    toggleobject([start_spot, cue], 'eventmarker', 127); % Turn off fix spot
     trialerror(3); % Released too early or broke fix
     idle(200, [1, 0, 0]); % Red Error Screen
     return
@@ -226,10 +215,7 @@ not_released = state(1);
 fixated = state(2);
 
 if (~fixated)
-    toggleobject([start_spot targ1new targ2new], 'eventmarker', 129); %Turn off fixation spot and targets
-    if ~(rand_nocue)
-        toggleobject(cue);
-    end
+    toggleobject([start_spot, cue, targ1new targ2new], 'eventmarker', 129); %Turn off fixation spot and targets
     trialerror(3); %Did not maintain fixation
     idle(1500, [1, 0, 0]); % Red Error Screen
     return
@@ -237,29 +223,20 @@ end
 
 
 if (~not_released && (comb == 1))
-    toggleobject([start_spot targ1new targ2new], 'eventmarker', 130); %Turn off fixation spot and targets
-    if ~(rand_nocue)
-        toggleobject(cue);
-    end
+    toggleobject([start_spot, cue, targ1new targ2new], 'eventmarker', 130); %Turn off fixation spot and targets
     trialerror(4); % Released when should not have
     idle(1500, [1, 0, 0]); % Red Error Screen
     return
 end
 
 if (not_released && (comb == 2))
-    toggleobject([start_spot targ1new targ2new], 'eventmarker', 131); %Turn off fixation spot and targets
-    if ~(rand_nocue)
-        toggleobject(cue);
-    end
+    toggleobject([start_spot, cue, targ1new targ2new], 'eventmarker', 131); %Turn off fixation spot and targets
     trialerror(5); % Did not release in time
     idle(1500, [1, 0, 0]); % Red Error Screen
     return
 end
 
-toggleobject([start_spot targ1new targ2new], 'eventmarker', 132); %Turn off fixation spot and targets
-if ~(rand_nocue)
-    toggleobject(cue);
-end
+toggleobject([start_spot, cue, targ1new targ2new], 'eventmarker', 132); %Turn off fixation spot and targets
 trialerror(0); % Correct
 
 % Reward

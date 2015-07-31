@@ -91,36 +91,43 @@ function make_condition(t1_s, t1_e, t2_s, t2_e, t1x, t1y, t2x, t2y, cue_angle, c
     TaskObject(2).Arg{1} = ['rect_' num2str(t1_s)];
     TaskObject(2).Arg{2} = t1x;
     TaskObject(2).Arg{3} = t1y;
-    TaskObject(2).Arg{4} = 150;
-    TaskObject(2).Arg{5} = 150;
+    TaskObject(2).Arg{4} = 100;
+    TaskObject(2).Arg{5} = 100;
 
     TaskObject(3).Type = 'Pic';
     TaskObject(3).Arg{1} = ['rect_' num2str(t1_e)];
     TaskObject(3).Arg{2} = t1x;
     TaskObject(3).Arg{3} = t1y;
-    TaskObject(3).Arg{4} = 150;
-    TaskObject(3).Arg{5} = 150;
+    TaskObject(3).Arg{4} = 100;
+    TaskObject(3).Arg{5} = 100;
 
     TaskObject(4).Type = 'Pic';
     TaskObject(4).Arg{1} = ['rect_' num2str(t2_s)];
     TaskObject(4).Arg{2} = t2x;
     TaskObject(4).Arg{3} = t2y;
-    TaskObject(4).Arg{4} = 150;
-    TaskObject(4).Arg{5} = 150;
+    TaskObject(4).Arg{4} = 100;
+    TaskObject(4).Arg{5} = 100;
 
     TaskObject(5).Type = 'Pic';
     TaskObject(5).Arg{1} = ['rect_' num2str(t2_e)];
     TaskObject(5).Arg{2} = t2x;
     TaskObject(5).Arg{3} = t2y;
-    TaskObject(5).Arg{4} = 150;
-    TaskObject(5).Arg{5} = 150;
+    TaskObject(5).Arg{4} = 100;
+    TaskObject(5).Arg{5} = 100;
     
     TaskObject(6).Type = 'Pic';
     TaskObject(6).Arg{1} = ['cue_' num2str(cue_angle)];
     TaskObject(6).Arg{2} = 0;
     TaskObject(6).Arg{3} = 0;
-    TaskObject(6).Arg{4} = 200;
-    TaskObject(6).Arg{5} = 200;
+    TaskObject(6).Arg{4} = 100;
+    TaskObject(6).Arg{5} = 100;
+    
+    TaskObject(7).Type = 'Pic';
+    TaskObject(7).Arg{1} = ['neutcue_' num2str(cue_angle)];
+    TaskObject(7).Arg{2} = 0;
+    TaskObject(7).Arg{3} = 0;
+    TaskObject(7).Arg{4} = 100;
+    TaskObject(7).Arg{5} = 100;
 
     %disp(['T1: ' num2str(t1_s) ' -> ' num2str(t1_e) '    T2: ' num2str(t2_s) ' -> ' num2str(t2_e) ]);
     
