@@ -17,6 +17,7 @@ targ2new = 5;
 cue = 6;
 neutcue = 7;
 
+
 editable( 'reward', 'fix_radius', 'wait_release', 'hold_time', 'pre_hold_time', 'blank_time', 'spec_theta', 'neut_cue', 'invalid_cue' );
 
 % Define Time Intervals (in ms):
@@ -29,7 +30,7 @@ blank_time = 250;
 wait_release = 1000;
 
 fix_radius = 0.7;
-spec_theta = 0; % No special direction by default.
+spec_theta = 0; % No movie frame / angle specified by default.
 neut_cue = 5; % 5% of trials are neutrally cued by default. Up to 40% should be doable.
 invalid_cue = 0; % 0% of trials are invalidly cued by default. Between 7 and 20% would be good.
 
@@ -81,63 +82,63 @@ if ( invalid_cue > 0 ) %&& ( neut_cue == 0 )
 end
 
 % %Reposition Objects to New Locations
-% span = 360; 
-% shift = span/2;
-% Preferred = randi([0, 1], 1, 1); % Decide whether it will be a preferred or non-preferred direction trial.
-% 
-% if spec_theta
-% 	if Preferred
-% 		theta = spec_theta;
-% 	elseif ~Preferred
-% 		if spec_theta < 180
-% 			theta = spec_theta + 180;
-% 		elseif spec_theta > 180
-% 			theta = spec_theta - 180;
-% 		end
-% 	end
-% else
-% 	theta = randi(span)-shift; %Get Random Angle
-% end
-% 
-% if theta < 0
-% 	theta = 360 + theta;
-% end
-% theta = theta * pi/180;
-% 
-% bhv_variable( 'theta', theta );
-% 
-% 
-% radius = 3; %randi(5); %Get Randum Radius between 1 and 5
-% [new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to polar coordinates
-% bhv_variable( 'radius', radius );
-% 
-% if isfield(TrialRecord, 'theta')
-%     thetas = TrialRecord.theta;
-%     thetas = [thetas theta];
-% else
-%     TrialRecord.theta = [];
-% end
-% 
-% if isfield(TrialRecord, 'radius')
-%     radii = TrialRecord.radius;
-%     radii = [radii radius];
-% else
-%     TrialRecord.radius = [];
-% end
-% 
-% if isfield(TrialRecord, 'comb')
-%     combs = TrialRecord.comb;
-%     combs = [combs comb];
-% else
-%     TrialRecord.comb = [];
-% end
-% 
-% success = reposition_object(targ1, new_targ_xpos, new_targ_ypos);
-% success = reposition_object(targ1new, new_targ_xpos, new_targ_ypos);
-% 
-% %Mirror Distractor to Opposing Coordinates
-% success = reposition_object(targ2, (-1 * new_targ_xpos), (-1 * new_targ_ypos));
-% success = reposition_object(targ2new, (-1 * new_targ_xpos), (-1 * new_targ_ypos));
+span = 360; 
+shift = span/2;
+Preferred = randi([0, 1], 1, 1); % Decide whether it will be a preferred or non-preferred direction trial.
+ 
+if spec_theta
+	if Preferred
+		theta = spec_theta;
+ 	elseif ~Preferred
+		if spec_theta < 180
+			theta = spec_theta + 180;
+		elseif spec_theta > 180
+			theta = spec_theta - 180;
+		end
+	end
+else
+	theta = randi(span)-shift; %Get Random Angle
+    theta = round(theta*10^(1))/(10^(1)); %Round to the nearest 10
+end
+ 
+if theta <= 0
+	theta = 360 + theta;
+end
+cue_frame = round(theta/10); %While still in degrees.
+theta = theta * pi/180;
+bhv_variable( 'theta', theta );
+ 
+radius = 3; %randi(5); %Get Randum Radius between 1 and 5
+[new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to polar coordinates
+bhv_variable( 'radius', radius );
+ 
+if isfield(TrialRecord, 'theta')
+    thetas = TrialRecord.theta;
+    thetas = [thetas theta];
+else
+    TrialRecord.theta = [];
+end
+ 
+if isfield(TrialRecord, 'radius')
+    radii = TrialRecord.radius;
+    radii = [radii radius];
+else
+     TrialRecord.radius = [];
+end
+ 
+if isfield(TrialRecord, 'comb')
+    combs = TrialRecord.comb;
+    combs = [combs comb];
+else
+     TrialRecord.comb = [];
+end
+ 
+success = reposition_object(targ1, new_targ_xpos, new_targ_ypos);
+success = reposition_object(targ1new, new_targ_xpos, new_targ_ypos);
+
+% Mirror Distractor to Opposing Coordinates
+success = reposition_object(targ2, (-1 * new_targ_xpos), (-1 * new_targ_ypos));
+success = reposition_object(targ2new, (-1 * new_targ_xpos), (-1 * new_targ_ypos));
 
 
 %%% Trial Errors %%%
@@ -196,7 +197,9 @@ if (~held) || (~fixated)
 end
 
 % Turn on Cue
-toggleobject(cue,'eventmarker', 131); % Cue on
+%toggleobject(cue,'eventmarker', 131); % Cue on
+toggleobject(cue, 'MovieStartFrame', cue_frame, 'MovieStep', 0, 'eventmarker', 121);
+
 
 % Tests lever remains pressed while fixating
 state = eyejoytrack('holdtouch', 1, [], 'holdfix', start_spot, fix_radius, cue_time);

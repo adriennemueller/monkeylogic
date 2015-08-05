@@ -5,7 +5,7 @@
 function movie = make_rotating_stick( Rwidth, Rheight, centered )
     rect = rgb(make_rect( Rwidth, Rheight, centered ));
     rect = colorize_rect( rect, [0.001 0.69 0.001] ); % Green
-    movie = make_rotating_movie( rect, 7 ); % Use 359 for 1deg steps
+    movie = make_rotating_movie( rect, 35 ); % Use 359 for 1deg steps
 end
 
 function movie = make_rotating_movie( I, nFrames )
@@ -15,11 +15,11 @@ function movie = make_rotating_movie( I, nFrames )
     for angle = step : step : (360 - step)
         frame = imrotate(I, angle, 'bicubic', 'crop');
         frame(frame==0) = 0.55;
-        imwrite( frame, ['cue_' num2str(round(angle)) '.jpeg'] );
+        imwrite( frame, ['cue36_' num2str(round(angle)) '.jpeg'] );
         movie = cat(4, movie, frame);
     end
     mov = immovie(movie);
-    movie2avi(mov, 'cue.avi', 'compression', 'Cinepak');    
+    movie2avi(mov, 'cue36.avi', 'compression', 'Cinepak');    
 end
 
 function img = make_rect( Rwidth, Rheight, centered )

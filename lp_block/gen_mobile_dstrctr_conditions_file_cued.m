@@ -12,7 +12,7 @@ function gen_mobile_dstrctr_conditions_file_cued( filename, b_span, b_overlap, n
 
     fid = fopen(filename, 'w');
     
-    textline = generate_condition('Header', 6, 'FID', fid);
+    textline = generate_condition('Header', 7, 'FID', fid);
     fprintf(fid,  '%s\n');
 
 	cond = 0;
@@ -115,15 +115,15 @@ function make_condition(t1_s, t1_e, t2_s, t2_e, t1x, t1y, t2x, t2y, cue_angle, c
     TaskObject(5).Arg{4} = 100;
     TaskObject(5).Arg{5} = 100;
     
-    TaskObject(6).Type = 'Pic';
-    TaskObject(6).Arg{1} = ['cue_' num2str(cue_angle)];
+    TaskObject(6).Type = 'Mov';
+    TaskObject(6).Arg{1} = 'gr_cue36';
     TaskObject(6).Arg{2} = 0;
     TaskObject(6).Arg{3} = 0;
     TaskObject(6).Arg{4} = 100;
     TaskObject(6).Arg{5} = 100;
     
-    TaskObject(7).Type = 'Pic';
-    TaskObject(7).Arg{1} = ['neutcue_' num2str(cue_angle)];
+    TaskObject(7).Type = 'Mov';
+    TaskObject(7).Arg{1} = 'gr_neutcue36';
     TaskObject(7).Arg{2} = 0;
     TaskObject(7).Arg{3} = 0;
     TaskObject(7).Arg{4} = 100;
@@ -135,7 +135,7 @@ function make_condition(t1_s, t1_e, t2_s, t2_e, t1x, t1y, t2x, t2y, cue_angle, c
         'Condition', cond, ...
         'Block', block, ...
         'Frequency', freq, ...
-        'TimingFile', 'lp_dstrctr_cued_mobile_blank', ...
+        'TimingFile', 'lp_dstrctr_cue_nocue_blank_fix_setable', ...
         'Info', s, ...
         'TaskObject', TaskObject, ...
         'FID', fid);
