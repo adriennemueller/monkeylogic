@@ -12,14 +12,14 @@ function movie = make_rotating_movie( I, nFrames )
     movie = I;
     step = 360 / (nFrames + 1);
 
-    for angle = step : step : (360 - step)
+    for angle = 0 : step : (360 - step)
         frame = imrotate(I, angle, 'bicubic', 'crop');
         frame(frame==0) = 0.55;
-        imwrite( frame, ['cue36_' num2str(round(angle)) '.jpeg'] );
+        %imwrite( frame, ['gr_neutcue36_' num2str(round(angle)) '.jpeg'] );
         movie = cat(4, movie, frame);
     end
     mov = immovie(movie);
-    movie2avi(mov, 'cue36.avi', 'compression', 'Cinepak');    
+    movie2avi(mov, 'gr_neutcue36.avi', 'compression', 'Cinepak');    
 end
 
 function img = make_rect( Rwidth, Rheight, centered )

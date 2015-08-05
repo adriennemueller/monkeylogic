@@ -82,8 +82,7 @@ if ( invalid_cue > 0 ) %&& ( neut_cue == 0 )
 end
 
 % %Reposition Objects to New Locations
-span = 360; 
-shift = span/2;
+span = 360;
 Preferred = randi([0, 1], 1, 1); % Decide whether it will be a preferred or non-preferred direction trial.
  
 if spec_theta
@@ -97,14 +96,11 @@ if spec_theta
 		end
 	end
 else
-	theta = randi(span)-shift; %Get Random Angle
+	theta = randi(span); %Get Random Angle
     theta = round(theta*10^(1))/(10^(1)); %Round to the nearest 10
 end
  
-if theta <= 0
-	theta = 360 + theta;
-end
-cue_frame = round(theta/10); %While still in degrees.
+cue_frame = round(theta/10) + 1; %While still in degrees.
 theta = theta * pi/180;
 bhv_variable( 'theta', theta );
  
