@@ -18,7 +18,7 @@ cue = 6;
 neutcue = 7;
 
 
-editable( 'reward', 'fix_radius', 'wait_release', 'hold_time', 'pre_hold_time', 'blank_time', 'spec_theta', 'neut_cue', 'invalid_cue' );
+editable( 'reward', 'fix_radius', 'wait_release', 'hold_time', 'pre_hold_time', 'blank_time', 'spec_theta', 'spec_radius', 'neut_cue', 'invalid_cue' );
 
 % Define Time Intervals (in ms):
 wait_for_fix = 1000;
@@ -26,11 +26,12 @@ wait_press = 1000;
 pre_hold_time = 300;
 hold_time = 300;
 cue_time = 500;
-blank_time = 250;
+blank_time = 300;
 wait_release = 1000;
 
 fix_radius = 0.7;
 spec_theta = 0; % No movie frame / angle specified by default.
+spec_radius = 3; % Default radius for target presentations.
 neut_cue = 5; % 5% of trials are neutrally cued by default. Up to 40% should be doable.
 invalid_cue = 0; % 0% of trials are invalidly cued by default. Between 7 and 20% would be good.
 
@@ -62,7 +63,7 @@ end
 
 %Probability of being an Invalidly Cued Trial 
 % Not Additive with Neutral Cue Trials
-disp('Pre if statement');
+cue_shift = 0;
 if ( invalid_cue > 0 ) %&& ( neut_cue == 0 )
     disp(num2str(invalid_cue));
     iv_prob1 = invalid_cue / 100;
@@ -74,10 +75,7 @@ if ( invalid_cue > 0 ) %&& ( neut_cue == 0 )
     rand_iv_cue = iv_cue( rand_iv_cueidx );
     bhv_variable( 'iv_cue', rand_iv_cue );
     if rand_iv_cue % Switch targ1 with targ2. Targ1 is the only one that will ever change. So half of these trials will still be validly cued.
-        targ1 = 4;
-        targ1new = 5;
-        targ2 = 2;
-        targ2new = 3;
+        cue_shift = 180;
     end
 end
 
@@ -97,16 +95,23 @@ if spec_theta
 	end
 else
 	theta = randi(span); %Get Random Angle
-    theta = round(theta*10^(1))/(10^(1)); %Round to the nearest 10
+    theta = round(theta*10^(-1))/(10^(-1)); %Round to the nearest 10
 end
- 
-cue_frame = round(theta/10) + 1; %While still in degrees.
+
+if theta + cue_shift > 360
+    cue_theta = theta - cue_shift;
+else
+    cue_theta = theta + cue_shift;
+end
+
+cue_frame = round( cue_theta / 10 ) + 1; %While still in degrees.
 theta = theta * pi/180;
 bhv_variable( 'theta', theta );
  
-radius = 3; %randi(5); %Get Randum Radius between 1 and 5
-[new_targ_xpos, new_targ_ypos] = pol2cart(theta, radius); %Convert to polar coordinates
-bhv_variable( 'radius', radius );
+
+%radius = randi(5); %Get Randum Radius between 1 and 5
+[new_targ_xpos, new_targ_ypos] = pol2cart(theta, spec_radius); %Convert to polar coordinates
+bhv_variable( 'radius', spec_radius );
  
 if isfield(TrialRecord, 'theta')
     thetas = TrialRecord.theta;
@@ -117,7 +122,7 @@ end
  
 if isfield(TrialRecord, 'radius')
     radii = TrialRecord.radius;
-    radii = [radii radius];
+    radii = [radii spec_radius];
 else
      TrialRecord.radius = [];
 end
