@@ -1,0 +1,8 @@
+Condition	Info	Frequency	Block	Timing File	TaskObject#1	TaskObject#2
+1	't_info', '0'	1 	1 	visual_RF_map	Fix(0.000,0.000)	Pic(rect_0,0,0,100.000,100.000)
+2	't_info', '45'	1 	1 	visual_RF_map	Fix(0.000,0.000)	Pic(rect_45,0,0,100.000,100.000)
+3	't_info', '90'	1 	1 	visual_RF_map	Fix(0.000,0.000)	Pic(rect_90,0,0,100.000,100.000)
+4	't_info', '135'	1 	1 	visual_RF_map	Fix(0.000,0.000)	Pic(rect_135,0,0,100.000,100.000)
+		
+
+
