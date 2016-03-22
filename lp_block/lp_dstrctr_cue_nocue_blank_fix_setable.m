@@ -98,6 +98,7 @@ else
     theta = round(theta*10^(-1))/(10^(-1)); %Round to the nearest 10
 end
 
+
 if theta + cue_shift > 360
     cue_theta = theta - cue_shift;
 else
@@ -107,33 +108,33 @@ end
 cue_frame = round( cue_theta / 10 ) + 1; %While still in degrees.
 theta = theta * pi/180;
 bhv_variable( 'theta', theta );
- 
+
 
 %radius = randi(5); %Get Randum Radius between 1 and 5
 [new_targ_xpos, new_targ_ypos] = pol2cart(theta, spec_radius); %Convert to polar coordinates
 bhv_variable( 'radius', spec_radius );
- 
+
 if isfield(TrialRecord, 'theta')
     thetas = TrialRecord.theta;
     thetas = [thetas theta];
 else
     TrialRecord.theta = [];
 end
- 
+
 if isfield(TrialRecord, 'radius')
     radii = TrialRecord.radius;
     radii = [radii spec_radius];
 else
-     TrialRecord.radius = [];
+    TrialRecord.radius = [];
 end
- 
+
 if isfield(TrialRecord, 'comb')
     combs = TrialRecord.comb;
     combs = [combs comb];
 else
-     TrialRecord.comb = [];
+    TrialRecord.comb = [];
 end
- 
+
 success = reposition_object(targ1, new_targ_xpos, new_targ_ypos);
 success = reposition_object(targ1new, new_targ_xpos, new_targ_ypos);
 
@@ -178,7 +179,7 @@ end
 state = eyejoytrack('holdtouch', 1, [], 'holdfix', start_spot, fix_radius, pre_hold_time);
 held = state(1); fixated = state(2);
 if (~held) || (~fixated)
-    toggleobject([start_spot targ1 targ2], 'eventmarker', 123); %Turn off fixation spot and targets
+    toggleobject(start_spot, 'eventmarker', 123); %Turn off fixation spot and targets
     trialerror(3); % Released too soon or broke fix
     idle(200, [1, 0, 0]); % Red Error Screen
     return
@@ -198,8 +199,7 @@ if (~held) || (~fixated)
 end
 
 % Turn on Cue
-%toggleobject(cue,'eventmarker', 131); % Cue on
-toggleobject(cue, 'MovieStartFrame', cue_frame, 'MovieStep', 0, 'eventmarker', 121);
+toggleobject(cue, 'MovieStartFrame', cue_frame, 'MovieStep', 0, 'eventmarker', 133);
 
 
 % Tests lever remains pressed while fixating
