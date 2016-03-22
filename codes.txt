@@ -118,5 +118,36 @@ Code	Description
 117	undefined
 118	undefined
 119	undefined
-120	initial fixation point on
-	
+120	Initial Fixation Point On
+121	TE No Initial Fixation
+122	TE No Lever Press by End of Fixation Cue
+123	TE Broke Fix/Press during Pre Hold Time
+124	Turn on Target(s)
+125	TE Broke Fix/Press During Hold Time
+126	Turned Off Targets for Blank
+127	TE Broke Fix/Press During Blank Time
+128	Turn Targets on Post-Blank
+129	TE Did Not Maintain Fixation
+130	TE Released Lever When Should Not Have
+131	TE Did Not Release In Time
+132	Trial Correct - Turn off Fixation Spot and Targets
+133	Turn on Cue	
+134	undefined
+135	undefined
+136	undefined
+137	undefined
+138	undefined
+139	undefined
+140	Position Value -6
+141	Position Value -5
+142	Position Value -4
+143	Position Value -3
+144	Position Value -2
+145	Position Value -1
+146	Position Value 0
+147	Position Value 1
+148	Position Value 2
+149	Position Value 3
+150	Position Value 4
+151	Position Value 5
+152	Position Value 6
