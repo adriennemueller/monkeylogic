@@ -2904,22 +2904,39 @@ elseif ismember(gcbo, get(findobj('tag', 'monkeylogicmainmenu'), 'children')) ||
             end
             
             % See if need to select lines as well as ports:
-            if (strncmpi('Button', iovar, 6) && strcmpi(AdaptorInfo(boardnum).SubSystemsNames(subsysnum), 'digitalio')) || ~isempty(strmatch('TTL', iovar)) || strcmp('DigCodesStrobeBit', iovar)  || strcmp('CodesDigOut', iovar),
+             if (strncmpi('Button', iovar, 6) && strcmpi(AdaptorInfo(boardnum).SubSystemsNames(subsysnum), 'digitalio')) || ~isempty(strmatch('TTL', iovar)) || strcmp('DigCodesStrobeBit', iovar)  || strcmp('CodesDigOut', iovar),
                 if ~strcmpi(AdaptorInfo(boardnum).SubSystemsNames(subsysnum), 'digitalio'),
                     mlmessage('*** TTLs and Digital Codes must be assigned to a digital output ***');
                     return
                 end
-                avlines = AdaptorInfo(boardnum).AvailableLines{subsysnum}{channelindx};
+                
                 if strcmp('CodesDigOut', iovar),
-                    choose_dio_line(avlines, 1);
+                    avports = AdaptorInfo(boardnum).AvailablePorts{subsysnum};
+                    InputOutput.(iovar).Channel = avports(channelindx);
+                    
+                    nport = length(channelindx);
+                    Line = cell(1,nport);
+                    for m=1:nport
+                        n = channelindx(m);
+                        avlines = AdaptorInfo(boardnum).AvailableLines{subsysnum}{n};
+                        thisport = avports(n);
+                        choose_dio_line(avlines,1,thisport);
+                        indx = get(findobj('tag', 'availablechannels'), 'userdata');
+                        if isempty(indx), continue; end
+                        Line{m} = avlines(indx);
+                    end
+                    if 1==nport, Line = Line{1}; end
+                    InputOutput.(iovar).Line = Line;
                 else
+                    avlines = AdaptorInfo(boardnum).AvailableLines{subsysnum}{channelindx};
                     choose_dio_line(avlines);
+                    indx = get(findobj('tag', 'availablechannels'), 'userdata');
+                    if isempty(indx),
+                        return
+                    end
+                    InputOutput.(iovar).Line = avlines(indx);
                 end
-                indx = get(findobj('tag', 'availablechannels'), 'userdata');
-                if isempty(indx),
-                    return
-                end
-                InputOutput.(iovar).Line = avlines(indx);               
+                
             elseif strcmp('Reward', iovar) && strcmpi(AdaptorInfo(boardnum).SubSystemsNames(subsysnum), 'digitalio'),
                 avlines = AdaptorInfo(boardnum).AvailableLines{subsysnum}{channelindx};
                 choose_dio_line(avlines);
@@ -3219,10 +3236,14 @@ uicontrol('style', 'pushbutton', 'position', [92 35 70 30], 'string', 'Cancel', 
 set(gcf, 'closerequestfcn', 'set(findobj(''tag'', ''availablechannels''), ''userdata'', []); delete(gcf)');
 if ~isempty(varargin) && varargin{1},
     set(h, 'max', 2); %enable multi-select
+    if 1 < length(varargin)
+        portnum = varargin{2};
+        set(f, 'name', ['Select Lines for Port ', num2str(portnum)]);
+    else
     set(f, 'name', 'Select Lines');
 end
+end
 waitfor(gcf);
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function choose_dio_port(avports, varargin)
 
