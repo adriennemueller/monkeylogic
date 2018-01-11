@@ -151,3 +151,12 @@ Code	Description
 150	Position Value 4
 151	Position Value 5
 152	Position Value 6
+153	MGS Cue On
+154	MGS Broke Fix During Cue
+155	MGS Cue Off
+156	MGS Broke Fix During Delay
+157	MGS Fixation Point Off
+158	MGS Did Not Saccade
+159	MGS Did Not Land on Target
+160	MGS Did Not Hold Target
+161	MGS Correct Trial

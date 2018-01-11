@@ -2,7 +2,7 @@
 
 function movie = make_rotating_rect( Rwidth, Rheight )
     rect = rgb(make_rect( Rwidth, Rheight ));
-    rect = colorize_rect( rect, [0.001 0.69 0.001] ); % Green
+    rect = colorize_rect( rect, [0.41 0.55 0.41] ); % [0.001 0.69 0.001] ); % Green
     movie = make_rotating_movie( rect, 71 ); %Why 71? Should be 7??
 end
 
@@ -16,7 +16,7 @@ function movie = make_rotating_movie( I, nFrames )
         %Make background grey instead of black
         frame(frame==0) = 0.55;
         %frame(frame==1) = 0;     
-        imwrite( frame, ['rect_' num2str(round(angle)) '.jpeg'] );
+        imwrite( frame, ['rect_C25_' num2str(round(angle)) '.jpeg'] );
         movie = cat(4, movie, frame);
     end
     mov = immovie(movie);

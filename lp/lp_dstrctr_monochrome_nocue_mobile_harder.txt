@@ -1,0 +1,2 @@
+Condition	Frequency	Block	Timing File		TaskObject#1	TaskObject#2			TaskObject#3			TaskObject#4			TaskObject#5			
+1		20		1 	lp_dstrctr_nocue_mobile	fix(0,0)	sqr([2 1],[1 1 1],1,3,0)	sqr([1 2],[1 1 1],1,3,0)	sqr([2 1],[1 1 1],1,-3,0)	sqr([1 2],[1 1 1],1,-3,0)

@@ -14,12 +14,12 @@ targ2 = 4;
 targ2new = 5;
 cue = 6;
 
-editable( 'reward' );
+editable( 'reward', 'blank_time' );
 
 % Define Time Intervals (in ms):
 wait_press = 1000;
 hold_time = 300;
-blank_time = 20;
+blank_time = 5;
 hold_time_postcue = 400;
 wait_release = 1000;
 
